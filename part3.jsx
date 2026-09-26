@@ -227,7 +227,7 @@ function ArtRiscosSolucao({data,setData,goHome}){
    1.3 — PROCESSOS DE LEVANTAMENTO DO PROBLEMA (métodos ágeis)
    ======================================================================= */
 function ArtLevantamentoAgil({data,setData,goHome}){
-  const defaults = {equipe:'',entrevistas:[{id:uid(),pessoa:'',resumo:''},{id:uid(),pessoa:'',resumo:''},{id:uid(),pessoa:'',resumo:''}],qualProblema:'',quemUsuarios:'',quaisObjetivos:'',historiaUsuario:'',jtbdSituacao:'',jtbdAcao:'',jtbdResultado:'',diagnostico:'',step:0,done:false};
+  const defaults = {equipe:'',entrevistas:[{id:uid(),pessoa:'',resumo:''},{id:uid(),pessoa:'',resumo:''},{id:uid(),pessoa:'',resumo:''}],qualProblema:'',quemUsuarios:'',quaisObjetivos:'',historiasUsuario:[''],jtbdSituacao:'',jtbdAcao:'',jtbdResultado:'',diagnostico:'',step:0,done:false};
   const [s,patch] = useSlice(data,setData,'levantamentoAgil',defaults);
   const [showSummary,setShowSummary] = useState(!!s.done);
   const meta = ARTIFACTS.find(a=>a.id==='levantamentoAgil');
@@ -277,8 +277,11 @@ function ArtLevantamentoAgil({data,setData,goHome}){
      )
     },
     {label:'User Story Mapping',
-     book:<p><strong>O que é:</strong> técnica visual para mapear a jornada do usuário como histórias: <strong>"Como [persona], quero [objetivo], para [benefício]."</strong> Exemplo (ODS 12 – Consumo Responsável): mapear a experiência de uma família ao tentar separar lixo reciclável e entregá-lo para coleta seletiva.</p>,
-     render:()=><Field type="textarea" label="História de usuário" value={s.historiaUsuario} onChange={v=>patch({historiaUsuario:v})} placeholder="Como [persona], quero [objetivo], para [benefício]." rows={2} />
+     book:<>
+       <p><strong>O que é:</strong> técnica visual para mapear a jornada do usuário como histórias: <strong>"Como [persona], quero [objetivo], para [benefício]."</strong> Exemplo (ODS 12 – Consumo Responsável): mapear a experiência de uma família ao tentar separar lixo reciclável e entregá-lo para coleta seletiva.</p>
+       <p>Um mapa de jornada geralmente reúne <strong>várias histórias</strong> encadeadas — adicione quantas forem necessárias.</p>
+     </>,
+     render:()=><ListField label="Histórias de usuário" items={s.historiasUsuario} onChange={v=>patch({historiasUsuario:v})} placeholder="Como [persona], quero [objetivo], para [benefício]." />
     },
     {label:'Jobs To Be Done (JTBD)',
      book:<>
@@ -301,7 +304,8 @@ function ArtLevantamentoAgil({data,setData,goHome}){
   ];
 
   if(showSummary){
-    const txt = `LEVANTAMENTO ÁGIL DO PROBLEMA\n\nEquipe: ${s.equipe||'—'}\n\nEntrevistas (Design Thinking):\n${s.entrevistas.filter(e=>e.pessoa).map(e=>'- '+e.pessoa+': '+e.resumo).join('\n')||'—'}\n\nLean Inception\nQual problema: ${s.qualProblema||'—'}\nQuem: ${s.quemUsuarios||'—'}\nObjetivos: ${s.quaisObjetivos||'—'}\n\nUser Story Mapping\n${s.historiaUsuario||'—'}\n\nJTBD\n${jtbd}\n\nDiagnóstico\n${s.diagnostico||'—'}`;
+    const historias = (s.historiasUsuario||[]).filter(Boolean);
+    const txt = `LEVANTAMENTO ÁGIL DO PROBLEMA\n\nEquipe: ${s.equipe||'—'}\n\nEntrevistas (Design Thinking):\n${s.entrevistas.filter(e=>e.pessoa).map(e=>'- '+e.pessoa+': '+e.resumo).join('\n')||'—'}\n\nLean Inception\nQual problema: ${s.qualProblema||'—'}\nQuem: ${s.quemUsuarios||'—'}\nObjetivos: ${s.quaisObjetivos||'—'}\n\nUser Story Mapping\n${historias.length?historias.map(h=>'- '+h).join('\n'):'—'}\n\nJTBD\n${jtbd}\n\nDiagnóstico\n${s.diagnostico||'—'}`;
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Board de Levantamento Ágil" filename="board-levantamento-agil">
@@ -319,7 +323,7 @@ function ArtLevantamentoAgil({data,setData,goHome}){
             </div>
             <div className="board-col">
               <h4>User Story Mapping</h4>
-              <div className="board-item">{s.historiaUsuario||'—'}</div>
+              {historias.length ? historias.map((h,i)=>(<div className="board-item" key={i}>{h}</div>)) : <p className="mini-note">Sem histórias registradas.</p>}
             </div>
             <div className="board-col">
               <h4>JTBD</h4>
