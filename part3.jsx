@@ -226,15 +226,102 @@ function ArtRiscosSolucao({data,setData,goHome}){
 /* =======================================================================
    1.3 — PROCESSOS DE LEVANTAMENTO DO PROBLEMA (métodos ágeis)
    ======================================================================= */
+const METODOS_LEVANTAMENTO = [
+  {id:'designThinking', icon:'🧑‍🤝‍🧑', label:'Design Thinking', blurb:'Entrevistas rápidas e observação em campo, centradas no ser humano.'},
+  {id:'leanInception', icon:'⚡', label:'Lean Inception', blurb:'Workshop rápido para alinhar problema, usuários e objetivos com a equipe.'},
+  {id:'userStoryMapping', icon:'🗺️', label:'User Story Mapping', blurb:'Mapeia a jornada do usuário como uma sequência de histórias.'},
+  {id:'jtbd', icon:'🎯', label:'Jobs To Be Done (JTBD)', blurb:'Descobre a tarefa que o usuário quer realizar, independentemente da solução.'},
+];
+
 function ArtLevantamentoAgil({data,setData,goHome}){
-  const defaults = {equipe:'',entrevistas:[{id:uid(),pessoa:'',resumo:''},{id:uid(),pessoa:'',resumo:''},{id:uid(),pessoa:'',resumo:''}],qualProblema:'',quemUsuarios:'',quaisObjetivos:'',historiasUsuario:[''],jtbdSituacao:'',jtbdAcao:'',jtbdResultado:'',diagnostico:'',step:0,done:false};
+  const defaults = {equipe:'',metodoEscolhido:'',entrevistas:[{id:uid(),pessoa:'',resumo:''},{id:uid(),pessoa:'',resumo:''},{id:uid(),pessoa:'',resumo:''}],qualProblema:'',quemUsuarios:'',quaisObjetivos:'',historiasUsuario:[{id:uid(),persona:'',objetivo:'',beneficio:''}],jtbdSituacao:'',jtbdAcao:'',jtbdResultado:'',diagnostico:'',step:0,done:false};
   const [s,patch] = useSlice(data,setData,'levantamentoAgil',defaults);
   const [showSummary,setShowSummary] = useState(!!s.done);
   const meta = ARTIFACTS.find(a=>a.id==='levantamentoAgil');
   function setEnt(i,field,val){ const next=[...s.entrevistas]; next[i]={...next[i],[field]:val}; patch({entrevistas:next}); }
   function addEnt(){ patch({entrevistas:[...s.entrevistas,{id:uid(),pessoa:'',resumo:''}]}); }
   function removeEnt(i){ const next=s.entrevistas.filter((_,idx)=>idx!==i); patch({entrevistas:next.length?next:[{id:uid(),pessoa:'',resumo:''}]}); }
+  function setHist(i,field,val){ const next=[...s.historiasUsuario]; next[i]={...next[i],[field]:val}; patch({historiasUsuario:next}); }
+  function addHist(){ patch({historiasUsuario:[...s.historiasUsuario,{id:uid(),persona:'',objetivo:'',beneficio:''}]}); }
+  function removeHist(i){ const next=s.historiasUsuario.filter((_,idx)=>idx!==i); patch({historiasUsuario:next.length?next:[{id:uid(),persona:'',objetivo:'',beneficio:''}]}); }
   const jtbd = `Quando eu ${s.jtbdSituacao||'[situação]'}, preciso de ${s.jtbdAcao||'[ação]'}, para que eu possa ${s.jtbdResultado||'[resultado]'}.`;
+  const historiaTexto = h => `Como ${h.persona||'[persona]'}, quero ${h.objetivo||'[objetivo]'}, para ${h.beneficio||'[benefício]'}.`;
+  const metodoAtual = METODOS_LEVANTAMENTO.find(m=>m.id===s.metodoEscolhido);
+
+  function metodoStep(id){
+    if(id==='designThinking') return {
+      label:'Design Thinking — entrevistas rápidas',
+      book:<>
+        <p><strong>O que é:</strong> abordagem centrada no ser humano, que busca entender profundamente necessidades e dores. <strong>Como aplicar:</strong> entrevistas rápidas, observação em campo, imersão no cotidiano do usuário. Exemplo (ODS 4 – Educação): observar uma sala de aula em escola pública para entender por que alunos abandonam os estudos.</p>
+        <p>Faça ao menos <strong>3 entrevistas rápidas</strong> com pessoas que vivenciam o problema.</p>
+      </>,
+      render:()=>(
+        <div>
+          {s.entrevistas.map((e,i)=>(
+            <div className="grid-2" key={e.id}>
+              <Field label={"Pessoa entrevistada "+(i+1)} value={e.pessoa} onChange={v=>setEnt(i,'pessoa',v)} />
+              <div style={{display:'flex',gap:'8px',alignItems:'flex-end'}}>
+                <div style={{flex:1}}><Field label="O que ela disse (resumo)" value={e.resumo} onChange={v=>setEnt(i,'resumo',v)} /></div>
+                <button className="icon-btn" style={{marginBottom:'16px'}} onClick={()=>removeEnt(i)}>×</button>
+              </div>
+            </div>
+          ))}
+          <button className="add-row-btn" onClick={addEnt}>+ adicionar entrevista</button>
+        </div>
+      )
+    };
+    if(id==='leanInception') return {
+      label:'Lean Inception',
+      book:<p><strong>O que é:</strong> workshop intensivo (geralmente 1 semana) para alinhar visão entre equipe, usuários e stakeholders. <strong>Como aplicar:</strong> dinâmicas rápidas para definir <strong>qual problema resolver</strong>, <strong>quem são os usuários</strong> e <strong>quais são os objetivos</strong>. Exemplo (ODS 11 – Cidades Sustentáveis): prefeitura, comunidade e técnicos mapeiam juntos os desafios do transporte público em bairros periféricos.</p>,
+      render:()=>(
+        <div>
+          <Field type="textarea" rows={2} label="Qual problema resolver?" value={s.qualProblema} onChange={v=>patch({qualProblema:v})} />
+          <Field type="textarea" rows={2} label="Quem são os usuários?" value={s.quemUsuarios} onChange={v=>patch({quemUsuarios:v})} />
+          <Field type="textarea" rows={2} label="Quais são os objetivos?" value={s.quaisObjetivos} onChange={v=>patch({quaisObjetivos:v})} />
+        </div>
+      )
+    };
+    if(id==='userStoryMapping') return {
+      label:'User Story Mapping',
+      book:<>
+        <p><strong>O que é:</strong> técnica visual para mapear a jornada do usuário como histórias: <strong>"Como [persona], quero [objetivo], para [benefício]."</strong> Exemplo (ODS 12 – Consumo Responsável): mapear a experiência de uma família ao tentar separar lixo reciclável e entregá-lo para coleta seletiva.</p>
+        <p>Assim como no JTBD, monte cada história preenchendo os três blocos abaixo — um mapa de jornada geralmente reúne <strong>várias histórias</strong> encadeadas, então adicione quantas forem necessárias.</p>
+      </>,
+      render:()=>(
+        <div>
+          {s.historiasUsuario.map((h,i)=>(
+            <div key={h.id} style={{marginBottom:'16px',paddingBottom:'16px',borderBottom: i<s.historiasUsuario.length-1 ? '1px dashed var(--line)' : 'none'}}>
+              <div className="grid-3">
+                <Field label="Como... (persona)" value={h.persona} onChange={v=>setHist(i,'persona',v)} placeholder="Ex.: uma mãe que trabalha fora" />
+                <Field label="...quero (objetivo)" value={h.objetivo} onChange={v=>setHist(i,'objetivo',v)} placeholder="Ex.: separar o lixo reciclável rapidamente" />
+                <div style={{display:'flex',gap:'8px',alignItems:'flex-end'}}>
+                  <div style={{flex:1}}><Field label="...para (benefício)" value={h.beneficio} onChange={v=>setHist(i,'beneficio',v)} placeholder="Ex.: não perder tempo na correria do dia" /></div>
+                  <button className="icon-btn" style={{marginBottom:'16px'}} onClick={()=>removeHist(i)}>×</button>
+                </div>
+              </div>
+              <div className="code-block">{historiaTexto(h)}</div>
+            </div>
+          ))}
+          <button className="add-row-btn" onClick={addHist}>+ adicionar história</button>
+        </div>
+      )
+    };
+    return {
+      label:'Jobs To Be Done (JTBD)',
+      book:<>
+        <p><strong>O que é:</strong> método que busca descobrir a "tarefa" que o usuário deseja realizar, independente da solução existente. <strong>Como aplicar:</strong> "Quando eu [situação], preciso de [ação], para que eu possa [resultado]."</p>
+        <p>Exemplo (ODS 3 – Saúde e Bem-Estar): "Quando quero cuidar da minha saúde, preciso de lembretes simples, para que eu não esqueça de tomar meus remédios."</p>
+      </>,
+      render:()=>(
+        <div>
+          <Field label="Quando eu... (situação)" value={s.jtbdSituacao} onChange={v=>patch({jtbdSituacao:v})} />
+          <Field label="...preciso de (ação)" value={s.jtbdAcao} onChange={v=>patch({jtbdAcao:v})} />
+          <Field label="...para que eu possa (resultado)" value={s.jtbdResultado} onChange={v=>patch({jtbdResultado:v})} />
+          <div className="code-block">{jtbd}</div>
+        </div>
+      )
+    };
+  }
 
   const steps = [
     {label:'Por que usar métodos ágeis',
@@ -244,59 +331,23 @@ function ArtLevantamentoAgil({data,setData,goHome}){
      </>,
      render:()=><Field label="Quem vai participar do levantamento com você?" value={s.equipe} onChange={v=>patch({equipe:v})} placeholder="Ex.: eu, mais 2 colegas de equipe, e um professor orientador" />
     },
-    {label:'Design Thinking — entrevistas rápidas',
-     book:<>
-       <p><strong>O que é:</strong> abordagem centrada no ser humano, que busca entender profundamente necessidades e dores. <strong>Como aplicar:</strong> entrevistas rápidas, observação em campo, imersão no cotidiano do usuário. Exemplo (ODS 4 – Educação): observar uma sala de aula em escola pública para entender por que alunos abandonam os estudos.</p>
-       <p>Faça ao menos <strong>3 entrevistas rápidas</strong> com pessoas que vivenciam o problema.</p>
-     </>,
+    {label:'Escolha o método de levantamento',
      render:()=>(
        <div>
-         {s.entrevistas.map((e,i)=>(
-           <div className="grid-2" key={e.id}>
-             <Field label={"Pessoa entrevistada "+(i+1)} value={e.pessoa} onChange={v=>setEnt(i,'pessoa',v)} />
-             <div style={{display:'flex',gap:'8px',alignItems:'flex-end'}}>
-               <div style={{flex:1}}><Field label="O que ela disse (resumo)" value={e.resumo} onChange={v=>setEnt(i,'resumo',v)} /></div>
-               <button className="icon-btn" style={{marginBottom:'16px'}} onClick={()=>removeEnt(i)}>×</button>
+         <p className="mini-note" style={{marginBottom:'14px'}}>O livro apresenta 4 métodos ágeis complementares para o levantamento do problema. Escolha um para aplicar agora — você pode voltar aqui depois e repetir o passo com outro método.</p>
+         <div className="method-grid">
+           {METODOS_LEVANTAMENTO.map(m=>(
+             <div key={m.id} className={"method-card"+(s.metodoEscolhido===m.id?' selected':'')} onClick={()=>patch({metodoEscolhido:m.id})}>
+               <div className="method-card-icon">{m.icon}</div>
+               <h4>{m.label}</h4>
+               <p>{m.blurb}</p>
              </div>
-           </div>
-         ))}
-         <button className="add-row-btn" onClick={addEnt}>+ adicionar entrevista</button>
+           ))}
+         </div>
        </div>
      )
     },
-    {label:'Lean Inception',
-     book:<>
-       <p><strong>O que é:</strong> workshop intensivo (geralmente 1 semana) para alinhar visão entre equipe, usuários e stakeholders. <strong>Como aplicar:</strong> dinâmicas rápidas para definir <strong>qual problema resolver</strong>, <strong>quem são os usuários</strong> e <strong>quais são os objetivos</strong>. Exemplo (ODS 11 – Cidades Sustentáveis): prefeitura, comunidade e técnicos mapeiam juntos os desafios do transporte público em bairros periféricos.</p>
-     </>,
-     render:()=>(
-       <div>
-         <Field type="textarea" rows={2} label="Qual problema resolver?" value={s.qualProblema} onChange={v=>patch({qualProblema:v})} />
-         <Field type="textarea" rows={2} label="Quem são os usuários?" value={s.quemUsuarios} onChange={v=>patch({quemUsuarios:v})} />
-         <Field type="textarea" rows={2} label="Quais são os objetivos?" value={s.quaisObjetivos} onChange={v=>patch({quaisObjetivos:v})} />
-       </div>
-     )
-    },
-    {label:'User Story Mapping',
-     book:<>
-       <p><strong>O que é:</strong> técnica visual para mapear a jornada do usuário como histórias: <strong>"Como [persona], quero [objetivo], para [benefício]."</strong> Exemplo (ODS 12 – Consumo Responsável): mapear a experiência de uma família ao tentar separar lixo reciclável e entregá-lo para coleta seletiva.</p>
-       <p>Um mapa de jornada geralmente reúne <strong>várias histórias</strong> encadeadas — adicione quantas forem necessárias.</p>
-     </>,
-     render:()=><ListField label="Histórias de usuário" items={s.historiasUsuario} onChange={v=>patch({historiasUsuario:v})} placeholder="Como [persona], quero [objetivo], para [benefício]." />
-    },
-    {label:'Jobs To Be Done (JTBD)',
-     book:<>
-       <p><strong>O que é:</strong> método que busca descobrir a "tarefa" que o usuário deseja realizar, independente da solução existente. <strong>Como aplicar:</strong> "Quando eu [situação], preciso de [ação], para que eu possa [resultado]."</p>
-       <p>Exemplo (ODS 3 – Saúde e Bem-Estar): "Quando quero cuidar da minha saúde, preciso de lembretes simples, para que eu não esqueça de tomar meus remédios."</p>
-     </>,
-     render:()=>(
-       <div>
-         <Field label="Quando eu... (situação)" value={s.jtbdSituacao} onChange={v=>patch({jtbdSituacao:v})} />
-         <Field label="...preciso de (ação)" value={s.jtbdAcao} onChange={v=>patch({jtbdAcao:v})} />
-         <Field label="...para que eu possa (resultado)" value={s.jtbdResultado} onChange={v=>patch({jtbdResultado:v})} />
-         <div className="code-block">{jtbd}</div>
-       </div>
-     )
-    },
+    ...(metodoAtual ? [metodoStep(metodoAtual.id)] : []),
     {label:'Síntese: diagnóstico claro',
      book:<p>Como no exemplo do livro (idosos que esquecem medicação): ao combinar entrevistas, User Story Mapping e JTBD, uma equipe chega a um diagnóstico claro — o problema não era "falta de disciplina", mas "ausência de lembretes simples adaptados a celulares básicos". Escreva o diagnóstico que emergiu da sua investigação.</p>,
      render:()=><Field type="textarea" label="Diagnóstico claro (o que realmente descobrimos)" value={s.diagnostico} onChange={v=>patch({diagnostico:v})} rows={3} />
@@ -304,30 +355,33 @@ function ArtLevantamentoAgil({data,setData,goHome}){
   ];
 
   if(showSummary){
-    const historias = (s.historiasUsuario||[]).filter(Boolean);
-    const txt = `LEVANTAMENTO ÁGIL DO PROBLEMA\n\nEquipe: ${s.equipe||'—'}\n\nEntrevistas (Design Thinking):\n${s.entrevistas.filter(e=>e.pessoa).map(e=>'- '+e.pessoa+': '+e.resumo).join('\n')||'—'}\n\nLean Inception\nQual problema: ${s.qualProblema||'—'}\nQuem: ${s.quemUsuarios||'—'}\nObjetivos: ${s.quaisObjetivos||'—'}\n\nUser Story Mapping\n${historias.length?historias.map(h=>'- '+h).join('\n'):'—'}\n\nJTBD\n${jtbd}\n\nDiagnóstico\n${s.diagnostico||'—'}`;
+    const historias = (s.historiasUsuario||[]).filter(h=>h.persona||h.objetivo||h.beneficio).map(historiaTexto);
+    let metodoTxt = '(nenhum método escolhido)';
+    if(s.metodoEscolhido==='designThinking') metodoTxt = 'Design Thinking\n'+(s.entrevistas.filter(e=>e.pessoa).map(e=>'- '+e.pessoa+': '+e.resumo).join('\n')||'—');
+    else if(s.metodoEscolhido==='leanInception') metodoTxt = `Lean Inception\nQual problema: ${s.qualProblema||'—'}\nQuem: ${s.quemUsuarios||'—'}\nObjetivos: ${s.quaisObjetivos||'—'}`;
+    else if(s.metodoEscolhido==='userStoryMapping') metodoTxt = 'User Story Mapping\n'+(historias.length?historias.map(h=>'- '+h).join('\n'):'—');
+    else if(s.metodoEscolhido==='jtbd') metodoTxt = 'Jobs To Be Done (JTBD)\n'+jtbd;
+    const txt = `LEVANTAMENTO ÁGIL DO PROBLEMA\n\nEquipe: ${s.equipe||'—'}\nMétodo escolhido: ${metodoAtual?metodoAtual.label:'—'}\n\n${metodoTxt}\n\nDiagnóstico\n${s.diagnostico||'—'}`;
     return (
       <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <CanvasFrame label="Board de Levantamento Ágil" filename="board-levantamento-agil">
+        <CanvasFrame label={"Board — "+(metodoAtual?metodoAtual.label:'Levantamento Ágil')}>
           <div className="board">
             <div className="board-col">
-              <h4>Design Thinking</h4>
-              {s.entrevistas.filter(e=>e.pessoa).map(e=>(<div className="board-item" key={e.id}><span className="lbl">{e.pessoa}</span>{e.resumo}</div>))}
-              {!s.entrevistas.filter(e=>e.pessoa).length && <p className="mini-note">Sem entrevistas registradas.</p>}
+              <h4>Método escolhido</h4>
+              <div className="board-item"><span className="lbl">{metodoAtual?metodoAtual.icon+' '+metodoAtual.label:'—'}</span>{metodoAtual?metodoAtual.blurb:'Nenhum método selecionado ainda.'}</div>
+              <div className="board-item"><span className="lbl">Equipe</span>{s.equipe||'—'}</div>
             </div>
             <div className="board-col">
-              <h4>Lean Inception</h4>
-              <div className="board-item"><span className="lbl">Qual problema</span>{s.qualProblema||'—'}</div>
-              <div className="board-item"><span className="lbl">Quem</span>{s.quemUsuarios||'—'}</div>
-              <div className="board-item"><span className="lbl">Objetivos</span>{s.quaisObjetivos||'—'}</div>
-            </div>
-            <div className="board-col">
-              <h4>User Story Mapping</h4>
-              {historias.length ? historias.map((h,i)=>(<div className="board-item" key={i}>{h}</div>)) : <p className="mini-note">Sem histórias registradas.</p>}
-            </div>
-            <div className="board-col">
-              <h4>JTBD</h4>
-              <div className="board-item mono">{jtbd}</div>
+              <h4>{metodoAtual?metodoAtual.label:'Resultado'}</h4>
+              {s.metodoEscolhido==='designThinking' && (s.entrevistas.filter(e=>e.pessoa).length ? s.entrevistas.filter(e=>e.pessoa).map(e=>(<div className="board-item" key={e.id}><span className="lbl">{e.pessoa}</span>{e.resumo}</div>)) : <p className="mini-note">Sem entrevistas registradas.</p>)}
+              {s.metodoEscolhido==='leanInception' && (<>
+                <div className="board-item"><span className="lbl">Qual problema</span>{s.qualProblema||'—'}</div>
+                <div className="board-item"><span className="lbl">Quem</span>{s.quemUsuarios||'—'}</div>
+                <div className="board-item"><span className="lbl">Objetivos</span>{s.quaisObjetivos||'—'}</div>
+              </>)}
+              {s.metodoEscolhido==='userStoryMapping' && (historias.length ? historias.map((h,i)=>(<div className="board-item" key={i}>{h}</div>)) : <p className="mini-note">Sem histórias registradas.</p>)}
+              {s.metodoEscolhido==='jtbd' && <div className="board-item mono">{jtbd}</div>}
+              {!metodoAtual && <p className="mini-note">Volte e escolha um método para ver o resultado aqui.</p>}
             </div>
           </div>
           <div className="brief-quote" style={{marginTop:'16px'}}><span className="lbl" style={{display:'block',fontSize:'11px',textTransform:'uppercase',color:'var(--accent)',fontWeight:700,marginBottom:'4px'}}>Diagnóstico</span>{s.diagnostico||'Ainda não escrito.'}</div>
@@ -336,7 +390,7 @@ function ArtLevantamentoAgil({data,setData,goHome}){
       </SummaryShell>
     );
   }
-  return <Screen title={meta.title} n={meta.n} stepIndex={s.step} setStepIndex={i=>patch({step:i})} steps={steps} onDone={()=>setShowSummary(true)} />;
+  return <Screen title={meta.title} n={meta.n} stepIndex={s.step} setStepIndex={i=>patch({step:i})} steps={steps} onDone={()=>setShowSummary(true)} canAdvance={s.step!==1 || !!s.metodoEscolhido} />;
 }
 
 /* =======================================================================

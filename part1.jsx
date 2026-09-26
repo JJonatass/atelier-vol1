@@ -255,7 +255,7 @@ function isArtifactStarted(slice){
 }
 
 /* ---------- Screen shell (stepper + book note + nav) ---------- */
-function Screen({title,n,stepIndex,setStepIndex,steps,onDone,doneLabel}){
+function Screen({title,n,stepIndex,setStepIndex,steps,onDone,doneLabel,canAdvance=true}){
   const total = steps.length;
   const step = steps[stepIndex];
   return (
@@ -280,11 +280,12 @@ function Screen({title,n,stepIndex,setStepIndex,steps,onDone,doneLabel}){
         <div className="nav-row">
           <button className="btn ghost" disabled={stepIndex===0} onClick={()=>setStepIndex(stepIndex-1)}>← Voltar</button>
           {stepIndex<total-1 ? (
-            <button className="btn primary" onClick={()=>setStepIndex(stepIndex+1)}>Avançar →</button>
+            <button className="btn primary" disabled={!canAdvance} onClick={()=>setStepIndex(stepIndex+1)}>Avançar →</button>
           ) : (
             <button className="btn primary" onClick={onDone}>{doneLabel||'Ver resumo'}</button>
           )}
         </div>
+        {!canAdvance && <p className="mini-note" style={{textAlign:'right',marginTop:'6px'}}>Escolha uma opção acima para continuar.</p>}
       </div>
     </div>
   );
