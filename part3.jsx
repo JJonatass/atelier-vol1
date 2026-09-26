@@ -107,7 +107,7 @@ function ArtInvestigarProblema({data,setData,goHome}){
     const txt = `INVESTIGAR O PROBLEMA\n\nTema: ${s.tema||'—'}\nODS relacionado: ${ods?('ODS '+ods.num+' — '+ods.title):'—'}\n\nContexto\nOnde: ${s.onde||'—'}\nQuando: ${s.quando||'—'}\nComo observou: ${s.comoObservou||'—'}\n\nAtores\nPrimários: ${s.usuariosPrimarios||'—'}\nSecundários: ${s.atoresSecundarios||'—'}\nInfluência: ${s.atoresInfluencia||'—'}\n\nCausas (5 porquês)\n${s.porques.filter(Boolean).map((p,i)=>(i+1)+'. '+p).join('\n')||'—'}\nControláveis: ${s.causasControlaveis||'—'}\nIncontroláveis: ${s.causasIncontrolaveis||'—'}\n\nImpactos\nCurto prazo: ${s.curtoPrazo||'—'}\nLongo prazo: ${s.longoPrazo||'—'}\nOutros ODS afetados: ${s.odsAfetados.join(', ')||'—'}\n\nIndicadores\nProcesso: ${s.indicadorProcesso||'—'}\nResultado: ${s.indicadorResultado||'—'}\nComplementar: ${s.indicadorComplementar||'—'}\n\nENUNCIADO DO PROBLEMA\n${s.enunciado||'—'}`;
     const ultimoPorque = s.porques.filter(Boolean).slice(-1)[0];
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Canvas do Problema" filename="canvas-do-problema">
           <div className="brief-head">
             {ods && <div className="brief-badge" style={{background:EIXO_META[ods.eixo].color}}>{ods.num}</div>}
@@ -194,7 +194,7 @@ function ArtRiscosSolucao({data,setData,goHome}){
       return `${r.nome}: ${c.presente===true?'PRESENTE':c.presente===false?'não presente':'não avaliado'}${c.nota?(' — '+c.nota):''}`;
     }).join('\n')+`\n\nEnunciado testado: ${s.enunciadoTeste||'—'}\nCabe em uma frase objetiva? ${s.cabeEmFrase===true?'Sim':s.cabeEmFrase===false?'Não':'—'}`;
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Raio-X de Riscos" filename="raio-x-de-riscos">
           <div className="risk-score">
             <div className="num">{presentes.length}/6</div>
@@ -307,7 +307,7 @@ function ArtLevantamentoAgil({data,setData,goHome}){
     const historias = (s.historiasUsuario||[]).filter(Boolean);
     const txt = `LEVANTAMENTO ÁGIL DO PROBLEMA\n\nEquipe: ${s.equipe||'—'}\n\nEntrevistas (Design Thinking):\n${s.entrevistas.filter(e=>e.pessoa).map(e=>'- '+e.pessoa+': '+e.resumo).join('\n')||'—'}\n\nLean Inception\nQual problema: ${s.qualProblema||'—'}\nQuem: ${s.quemUsuarios||'—'}\nObjetivos: ${s.quaisObjetivos||'—'}\n\nUser Story Mapping\n${historias.length?historias.map(h=>'- '+h).join('\n'):'—'}\n\nJTBD\n${jtbd}\n\nDiagnóstico\n${s.diagnostico||'—'}`;
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Board de Levantamento Ágil" filename="board-levantamento-agil">
           <div className="board">
             <div className="board-col">
@@ -392,7 +392,7 @@ function ArtReferenciasPesquisa({data,setData,goHome}){
   if(showSummary){
     const txt = `REFERÊNCIAS DE PESQUISA\n\n`+s.referencias.filter(r=>r.fonte).map(r=>`Fonte: ${r.fonte} (${r.ano}) — ${r.tipo}\nAchado: ${r.achado}\nRelevância: ${r.relevancia}\nODS: ${r.ods?odsLabel(r.ods):'—'}`).join('\n\n')+`\n\nPor que são incontornáveis:\n${s.paragrafoFinal||'—'}`;
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Dossiê de Referências" filename="dossie-de-referencias">
           <div className="table-wrap">
             <table className="tbl">

@@ -64,7 +64,7 @@ function ArtAnaliseConcorrentes({data,setData,goHome}){
     const txt = `ANÁLISE DE CONCORRENTES\n\n`+s.concorrentes.filter(c=>c.nome).map(c=>`${c.nome} (${c.tipo}) — público: ${c.publicoAlvo}\nFuncionalidades: ${c.funcionalidades}\nFortes: ${c.pontosFortes}\nFracos: ${c.pontosFracos}\nOportunidades: ${c.oportunidades}\nNotas (1-5) — usabilidade: ${c.notas.usabilidade||'—'}, confiança: ${c.notas.confianca||'—'}, preço: ${c.notas.preco||'—'}, alcance: ${c.notas.alcance||'—'}`).join('\n\n')+`\n\nOportunidade de diferenciação:\n${s.oportunidadeDiferencial||'—'}`;
     const comCriterios = s.concorrentes.filter(c=>c.nome);
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Matriz de Análise de Concorrentes" filename="matriz-de-concorrentes">
           <div className="table-wrap">
             <table className="tbl">
@@ -130,7 +130,7 @@ function ArtMapaEmpatia({data,setData,goHome}){
   if(showSummary){
     const txt = `MAPA DE EMPATIA\nUsuário: ${s.usuario||'—'}\n\nPensa/Sente: ${s.pensaSente||'—'}\nOuve/Fala: ${s.ouveFala||'—'}\nVê/Faz: ${s.veFaz||'—'}\nDores: ${s.dores||'—'}\nGanhos: ${s.ganhos||'—'}`;
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Mapa de Empatia" filename="mapa-de-empatia">
           <div className="empathy-banner">{s.usuario || 'Usuário do mapa'}</div>
           <div className="empathy-grid">
@@ -209,7 +209,7 @@ function ArtPersonas({data,setData,goHome}){
   if(showSummary){
     const txt = `PERSONAS\n\nPúblico-alvo: ${s.publicoAlvo||'—'}\n\n`+s.personas.filter(p=>p.nome).map(p=>`${p.nome}, ${p.idade} anos — ${p.profissao}\nContexto: ${p.contexto}\nSonhos: ${p.sonhos}\nDores: ${p.dores}\nNecessidades: ${p.necessidades}\nFrase: "${p.frase}"\nODS: ${p.ods?odsLabel(p.ods):'—'}`).join('\n\n')+`\n\nValidação: ${s.validado.join(', ')||'—'}`;
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Cartões de Persona" filename="cartoes-de-persona">
           <div className="home-grid">
             {s.personas.filter(p=>p.nome).map(p=>{
@@ -288,7 +288,7 @@ function ArtRequisitosRegras({data,setData,goHome}){
       </div>
     );
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Especificação Inicial" filename="especificacao-inicial">
           {section('Requisitos Funcionais','RF',s.funcionais)}
           {section('Requisitos Não Funcionais','RNF',s.naoFuncionais)}

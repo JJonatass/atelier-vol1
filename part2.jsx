@@ -69,7 +69,7 @@ function ArtOdsExplorer({data,setData,goHome}){
     const markedNums = todos.map(label=>parseInt(label.replace('ODS ',''),10));
     const txt = `OS 17 ODS E OS 4 EIXOS\n\nODS que mais conectam com problemas percebidos:\n${todos.map(i=>'- '+i).join('\n')||'—'}\n\nExemplo de transversalidade:\n${s.transversal||'—'}\n\nCuriosidade/observação:\n${s.curiosidade||'—'}`;
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Meu mapa de ODS" filename="meu-mapa-de-ods">
           <h3 style={{marginTop:0}}>Meu Mapa de ODS</h3>
           <p className="mini-note" style={{marginBottom:'14px'}}>Em destaque: os ODS que mais conectam com problemas que já percebi.</p>
@@ -184,7 +184,7 @@ function ArtPropositoSustentavel({data,setData,goHome}){
     const txt = `TECNOLOGIA COM PROPÓSITO\n\nODS foco: ${ods?('ODS '+ods.num+' — '+ods.title):'—'}\n\nDados de pesquisa:\n${s.dados.filter(Boolean).map(d=>'- '+d).join('\n')||'—'}\nFontes: ${s.fontes||'—'}\n\nEnunciado do problema:\n${s.enunciado||'—'}\n\nEstudo de caso: ${s.estudoCaso.app||'—'}\nProposta de valor: ${s.estudoCaso.propostaValor||'—'}\nPonto forte: ${s.estudoCaso.pontoForte||'—'}\nPonto fraco: ${s.estudoCaso.pontoFraco||'—'}\nInovação proposta: ${s.estudoCaso.inovacao||'—'}\n\nSUSTENTÁVEL, ESCALÁVEL, VIÁVEL\n${sevTxt('sustentavel','Sustentável')}\n${sevTxt('escalavel','Escalável')}\n${sevTxt('viavel','Viável')}`;
     const sevLabelOf = k => k==='sustentavel'?'Sustentável':k==='escalavel'?'Escalável':'Viável';
     return (
-      <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <CanvasFrame label="Ficha do Projeto" filename="ficha-do-projeto">
           <div className="brief-head">
             {ods && <div className="brief-badge" style={{background:EIXO_META[ods.eixo].color}}>{ods.num}</div>}

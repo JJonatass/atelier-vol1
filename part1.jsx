@@ -303,36 +303,14 @@ function useSlice(data,setData,id,defaults){
   return [slice, patch];
 }
 
-/* ---------- exportable canvas frame (renders a visual board + "baixar imagem") ---------- */
-function CanvasFrame({label,filename,children}){
-  const ref = useRef(null);
-  const [busy,setBusy] = useState(false);
-  const [err,setErr] = useState('');
-  function download(){
-    if(!ref.current || !window.html2canvas) { setErr('Exportação de imagem indisponível neste navegador.'); return; }
-    setBusy(true); setErr('');
-    window.html2canvas(ref.current, {backgroundColor:null, scale:2}).then(canvas=>{
-      canvas.toBlob(blob=>{
-        setBusy(false);
-        if(!blob){ setErr('Não consegui gerar a imagem.'); return; }
-        try{
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url; a.download = (filename||'artefato')+'.png';
-          document.body.appendChild(a); a.click(); document.body.removeChild(a);
-          setTimeout(()=>URL.revokeObjectURL(url), 4000);
-        }catch(e){ setErr('Não consegui baixar a imagem neste ambiente.'); }
-      });
-    }).catch(()=>{ setBusy(false); setErr('Não consegui gerar a imagem.'); });
-  }
+/* ---------- visual canvas frame (board look, no image export — see infographic prompt below) ---------- */
+function CanvasFrame({label,children}){
   return (
     <div className="canvas-frame">
       <div className="canvas-frame-head">
         <span className="k">{label||'Artefato visual'}</span>
-        <button type="button" className="export-btn" disabled={busy} onClick={download}>{busy?'Gerando…':'⬇ Baixar imagem (PNG)'}</button>
       </div>
-      <div className="canvas-body" ref={ref}>{children}</div>
-      {err && <div style={{padding:'0 16px 12px'}}><p className="export-note" style={{color:'var(--error)'}}>{err}</p></div>}
+      <div className="canvas-body">{children}</div>
     </div>
   );
 }
@@ -361,7 +339,43 @@ function scoreColor(v){
   return '#2E7D4F';
 }
 
-function SummaryShell({title,n,summaryText,onEdit,onHome,children}){
+/* ---------- prompt para infográfico gerado por IA de imagem (widescreen, para slide/impressão) ---------- */
+const VISUAL_THEMES = {
+  odsExplorer: 'um mapa múndi estilizado com ícones de sustentabilidade brilhando sobre continentes, mãos de pessoas diversas apontando para o mapa, fotografia editorial com luz suave',
+  propositoSustentavel: 'uma equipe jovem e diversa de estudantes debatendo em torno de um laptop com post-its de propósito colados na parede atrás, luz natural de sala de aula',
+  investigarProblema: 'uma pessoa entrevistando outra em campo, caderno de anotações aberto na mão, ambiente real (rua, comunidade ou casa), fotografia documental',
+  riscosSolucao: 'um quadro branco de escritório coberto por post-its vermelhos e amarelos organizados em colunas de risco, luz de escritório suave',
+  levantamentoAgil: 'uma mesa de brainstorming ágil vista de cima, com post-its coloridos formando uma jornada em etapas, canetas e um celular ao lado, luz natural',
+  referenciasPesquisa: 'uma mesa de estudo com livros abertos, artigos impressos com grifos e um laptop mostrando gráficos, luz quente de biblioteca',
+  analiseConcorrentes: 'várias telas de celular e tablet exibindo aplicativos diferentes, organizadas lado a lado sobre uma mesa de designer, vista de cima',
+  mapaEmpatia: 'um retrato documental de uma pessoa real em seu ambiente cotidiano, expressão pensativa, luz natural suave, simbolizando empatia',
+  personas: 'um still-life editorial de objetos pessoais sobre uma mesa de madeira — óculos, celular, agenda, xícara — representando o perfil de uma pessoa, luz de estúdio',
+  requisitosRegras: 'uma prancheta com uma lista de verificação numerada e um checklist técnico, ambiente de escritório organizado, luz neutra',
+};
+
+function buildInfographicPrompt({id,title,n,summaryText}){
+  const cena = VISUAL_THEMES[id] || 'um ambiente relacionado ao tema, com pessoas reais e elementos ligados à sustentabilidade, fotografia realista e bem iluminada';
+  return [
+    `Crie um infográfico em formato widescreen 16:9 (1920×1080px), pronto para um slide de apresentação, sobre "${title}" (${n} — Livro Vol. 1, "Soluções Digitais para um Futuro Sustentável").`,
+    ``,
+    `IMAGEM DE FUNDO: fotografia realista e de alta qualidade, ocupando o slide inteiro, mostrando ${cena}. Cores harmônicas com uma paleta verde (#1F6F4E) e dourado (#B8862E).`,
+    ``,
+    `LEGIBILIDADE: sobreponha um degradê semitransparente (de verde-escuro/preto para transparente, opacidade entre 55% e 75%) exatamente na área onde o texto vai ficar, garantindo alto contraste e leitura fácil dos dados sobre a foto de fundo. Nenhum texto deve ficar diretamente sobre a foto sem esse apoio.`,
+    ``,
+    `TIPOGRAFIA: título em fonte serifada elegante, textos de apoio em fonte sans-serif limpa, em branco ou creme claro sobre o degradê.`,
+    ``,
+    `LAYOUT: título em destaque, dados organizados em blocos/cards curtos e bem espaçados, com hierarquia clara entre o dado principal e os detalhes de apoio. Estilo editorial e profissional, como uma lâmina de apresentação — nunca um pôster genérico de IA.`,
+    ``,
+    `CONTEÚDO REAL A EXIBIR (não invente dados — use exatamente o que está abaixo, resumindo apenas o necessário para caber no espaço do slide):`,
+    `"""`,
+    (summaryText||'').trim() || '(nenhum dado preenchido ainda — complete o artefato antes de gerar a imagem)',
+    `"""`,
+  ].join('\n');
+}
+
+function SummaryShell({title,n,id,summaryText,onEdit,onHome,children}){
+  const [promptOpen,setPromptOpen] = useState(false);
+  const prompt = useMemo(()=>buildInfographicPrompt({id,title,n,summaryText}), [id,title,n,summaryText]);
   return (
     <div className="card">
       <div className="toolbar-top">
@@ -371,9 +385,18 @@ function SummaryShell({title,n,summaryText,onEdit,onHome,children}){
         </div>
         <div className="top-actions">
           <button className="btn" onClick={onEdit}>✎ Editar</button>
+          <button type="button" className="btn" onClick={()=>setPromptOpen(o=>!o)}>✨ {promptOpen?'Fechar prompt':'Gerar prompt de infográfico'}</button>
           <button className="btn primary" onClick={onHome}>Concluir e voltar</button>
         </div>
       </div>
+      {promptOpen && (
+        <div className="summary-block" style={{marginBottom:'18px'}}>
+          <h4>Prompt para gerar o infográfico (IA de imagem)</h4>
+          <p className="mini-note" style={{marginBottom:'10px'}}>Cole este texto em um gerador de imagens por IA (ex.: ChatGPT/DALL·E, Gemini, Midjourney) para criar uma lâmina em 16:9 pronta para apresentação.</p>
+          <textarea readOnly value={prompt} rows={14} onFocus={e=>e.target.select()} style={{fontFamily:'var(--font-mono)',fontSize:'12px',lineHeight:'1.5'}} />
+          <div style={{marginTop:'10px'}}><CopyButton text={prompt} label="Copiar prompt" /></div>
+        </div>
+      )}
       <div>{children}</div>
     </div>
   );
