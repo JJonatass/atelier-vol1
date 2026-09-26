@@ -2,13 +2,15 @@
    1.5 — ANÁLISE DE CONCORRENTES
    ======================================================================= */
 function ArtAnaliseConcorrentes({data,setData,goHome}){
-  const defaults = {concorrentes:[{id:uid(),nome:'',tipo:'Direto',publicoAlvo:'',funcionalidades:'',pontosFortes:'',pontosFracos:'',oportunidades:''},{id:uid(),nome:'',tipo:'Direto',publicoAlvo:'',funcionalidades:'',pontosFortes:'',pontosFracos:'',oportunidades:''}],oportunidadeDiferencial:'',step:0,done:false};
+  const blankC = ()=>({id:uid(),nome:'',tipo:'Direto',publicoAlvo:'',funcionalidades:'',pontosFortes:'',pontosFracos:'',oportunidades:'',notas:{usabilidade:0,confianca:0,preco:0,alcance:0}});
+  const defaults = {concorrentes:[blankC(),blankC()],oportunidadeDiferencial:'',step:0,done:false};
   const [s,patch] = useSlice(data,setData,'analiseConcorrentes',defaults);
   const [showSummary,setShowSummary] = useState(!!s.done);
   const meta = ARTIFACTS.find(a=>a.id==='analiseConcorrentes');
   function setC(i,field,val){ const next=[...s.concorrentes]; next[i]={...next[i],[field]:val}; patch({concorrentes:next}); }
-  function addC(){ patch({concorrentes:[...s.concorrentes,{id:uid(),nome:'',tipo:'Direto',publicoAlvo:'',funcionalidades:'',pontosFortes:'',pontosFracos:'',oportunidades:''}]}); }
-  function removeC(i){ const next=s.concorrentes.filter((_,idx)=>idx!==i); patch({concorrentes:next.length?next:[{id:uid(),nome:'',tipo:'Direto',publicoAlvo:'',funcionalidades:'',pontosFortes:'',pontosFracos:'',oportunidades:''}]}); }
+  function setNota(i,field,val){ const next=[...s.concorrentes]; next[i]={...next[i],notas:{...(next[i].notas||{}),[field]:val}}; patch({concorrentes:next}); }
+  function addC(){ patch({concorrentes:[...s.concorrentes,blankC()]}); }
+  function removeC(i){ const next=s.concorrentes.filter((_,idx)=>idx!==i); patch({concorrentes:next.length?next:[blankC()]}); }
 
   const steps = [
     {label:'Por que fazer análise de concorrentes',
@@ -39,6 +41,13 @@ function ArtAnaliseConcorrentes({data,setData,goHome}){
                <Field type="textarea" rows={2} label="Pontos fracos" value={c.pontosFracos} onChange={v=>setC(i,'pontosFracos',v)} />
              </div>
              <Field type="textarea" rows={2} label="Oportunidades de melhoria" value={c.oportunidades} onChange={v=>setC(i,'oportunidades',v)} />
+             <label className="field-label">Notas de 1 a 5 (para a matriz comparativa)</label>
+             <div className="grid-3" style={{marginBottom:'8px'}}>
+               <RatingField label="Usabilidade" value={c.notas.usabilidade} onChange={v=>setNota(i,'usabilidade',v)} />
+               <RatingField label="Confiança/adesão" value={c.notas.confianca} onChange={v=>setNota(i,'confianca',v)} />
+               <RatingField label="Preço/custo-benefício" value={c.notas.preco} onChange={v=>setNota(i,'preco',v)} />
+             </div>
+             <RatingField label="Alcance/escala" value={c.notas.alcance} onChange={v=>setNota(i,'alcance',v)} />
            </div>
          ))}
          <button className="add-row-btn" onClick={addC}>+ adicionar concorrente</button>
@@ -52,16 +61,29 @@ function ArtAnaliseConcorrentes({data,setData,goHome}){
   ];
 
   if(showSummary){
-    const txt = `ANÁLISE DE CONCORRENTES\n\n`+s.concorrentes.filter(c=>c.nome).map(c=>`${c.nome} (${c.tipo}) — público: ${c.publicoAlvo}\nFuncionalidades: ${c.funcionalidades}\nFortes: ${c.pontosFortes}\nFracos: ${c.pontosFracos}\nOportunidades: ${c.oportunidades}`).join('\n\n')+`\n\nOportunidade de diferenciação:\n${s.oportunidadeDiferencial||'—'}`;
+    const txt = `ANÁLISE DE CONCORRENTES\n\n`+s.concorrentes.filter(c=>c.nome).map(c=>`${c.nome} (${c.tipo}) — público: ${c.publicoAlvo}\nFuncionalidades: ${c.funcionalidades}\nFortes: ${c.pontosFortes}\nFracos: ${c.pontosFracos}\nOportunidades: ${c.oportunidades}\nNotas (1-5) — usabilidade: ${c.notas.usabilidade||'—'}, confiança: ${c.notas.confianca||'—'}, preço: ${c.notas.preco||'—'}, alcance: ${c.notas.alcance||'—'}`).join('\n\n')+`\n\nOportunidade de diferenciação:\n${s.oportunidadeDiferencial||'—'}`;
+    const comCriterios = s.concorrentes.filter(c=>c.nome);
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <div className="table-wrap">
-          <table className="tbl">
-            <thead><tr><th>Concorrente</th><th>Tipo</th><th>Fortes</th><th>Fracos</th><th>Oportunidades</th></tr></thead>
-            <tbody>{s.concorrentes.filter(c=>c.nome).map(c=>(<tr key={c.id}><td>{c.nome}</td><td>{c.tipo}</td><td>{c.pontosFortes}</td><td>{c.pontosFracos}</td><td>{c.oportunidades}</td></tr>))}</tbody>
-          </table>
-        </div>
-        <div className="summary-block" style={{marginTop:'12px'}}><h4>Sua oportunidade</h4><p style={{color:'var(--ink)'}}>{s.oportunidadeDiferencial||'—'}</p></div>
+        <CanvasFrame label="Matriz de Análise de Concorrentes" filename="matriz-de-concorrentes">
+          <div className="table-wrap">
+            <table className="tbl">
+              <thead><tr><th>Concorrente</th><th>Tipo</th><th>Usabilidade</th><th>Confiança</th><th>Preço</th><th>Alcance</th><th>Oportunidade</th></tr></thead>
+              <tbody>{comCriterios.map(c=>(
+                <tr key={c.id}>
+                  <td><strong>{c.nome}</strong><br/><span className="mini-note">{c.publicoAlvo}</span></td>
+                  <td>{c.tipo}</td>
+                  <td><span className="score-cell" style={{background:scoreColor(c.notas.usabilidade)}}>{c.notas.usabilidade||'—'}</span></td>
+                  <td><span className="score-cell" style={{background:scoreColor(c.notas.confianca)}}>{c.notas.confianca||'—'}</span></td>
+                  <td><span className="score-cell" style={{background:scoreColor(c.notas.preco)}}>{c.notas.preco||'—'}</span></td>
+                  <td><span className="score-cell" style={{background:scoreColor(c.notas.alcance)}}>{c.notas.alcance||'—'}</span></td>
+                  <td style={{maxWidth:'220px'}}>{c.oportunidades}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+          <div className="brief-quote" style={{marginTop:'16px'}}><span style={{display:'block',fontSize:'11px',textTransform:'uppercase',color:'var(--accent)',fontWeight:700,marginBottom:'4px'}}>Sua oportunidade de diferenciação</span>{s.oportunidadeDiferencial||'Ainda não definida.'}</div>
+        </CanvasFrame>
         <CopyButton text={txt} />
       </SummaryShell>
     );
@@ -109,13 +131,20 @@ function ArtMapaEmpatia({data,setData,goHome}){
     const txt = `MAPA DE EMPATIA\nUsuário: ${s.usuario||'—'}\n\nPensa/Sente: ${s.pensaSente||'—'}\nOuve/Fala: ${s.ouveFala||'—'}\nVê/Faz: ${s.veFaz||'—'}\nDores: ${s.dores||'—'}\nGanhos: ${s.ganhos||'—'}`;
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <p className="mini-note" style={{marginBottom:'10px'}}><strong>{s.usuario||'Usuário'}</strong></p>
-        <div className="grid-2">
-          <div className="summary-block"><h4>Pensa/Sente</h4><p style={{color:'var(--ink)'}}>{s.pensaSente||'—'}</p></div>
-          <div className="summary-block"><h4>Ouve/Fala</h4><p style={{color:'var(--ink)'}}>{s.ouveFala||'—'}</p></div>
-          <div className="summary-block"><h4>Vê/Faz</h4><p style={{color:'var(--ink)'}}>{s.veFaz||'—'}</p></div>
-          <div className="summary-block"><h4>Dores/Ganhos</h4><p style={{color:'var(--ink)'}}><strong>Dores:</strong> {s.dores||'—'}</p><p style={{color:'var(--ink)'}}><strong>Ganhos:</strong> {s.ganhos||'—'}</p></div>
-        </div>
+        <CanvasFrame label="Mapa de Empatia" filename="mapa-de-empatia">
+          <div className="empathy-banner">{s.usuario || 'Usuário do mapa'}</div>
+          <div className="empathy-grid">
+            <div className="empathy-quad q1"><h5>💭 Pensa/Sente</h5><p>{s.pensaSente||'—'}</p></div>
+            <div className="empathy-quad q2"><h5>🗣️ Ouve/Fala</h5><p>{s.ouveFala||'—'}</p></div>
+            <div className="empathy-quad q3"><h5>👁️ Vê/Faz</h5><p>{s.veFaz||'—'}</p></div>
+            <div className="empathy-quad q4"><h5>⚖️ Dores/Ganhos</h5>
+              <div className="split">
+                <div><span className="d">Dores</span><p style={{margin:'2px 0 0'}}>{s.dores||'—'}</p></div>
+                <div><span className="g">Ganhos</span><p style={{margin:'2px 0 0'}}>{s.ganhos||'—'}</p></div>
+              </div>
+            </div>
+          </div>
+        </CanvasFrame>
         <div style={{marginTop:'10px'}}><CopyButton text={txt} /></div>
       </SummaryShell>
     );
@@ -181,17 +210,31 @@ function ArtPersonas({data,setData,goHome}){
     const txt = `PERSONAS\n\nPúblico-alvo: ${s.publicoAlvo||'—'}\n\n`+s.personas.filter(p=>p.nome).map(p=>`${p.nome}, ${p.idade} anos — ${p.profissao}\nContexto: ${p.contexto}\nSonhos: ${p.sonhos}\nDores: ${p.dores}\nNecessidades: ${p.necessidades}\nFrase: "${p.frase}"\nODS: ${p.ods?odsLabel(p.ods):'—'}`).join('\n\n')+`\n\nValidação: ${s.validado.join(', ')||'—'}`;
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <div className="home-grid">
-          {s.personas.filter(p=>p.nome).map(p=>(
-            <div className="summary-block" key={p.id}>
-              <h4>{p.nome}{p.idade?(', '+p.idade+' anos'):''}</h4>
-              <p style={{color:'var(--ink)'}}>{p.profissao}</p>
-              <p style={{color:'var(--ink)'}}><strong>Dores:</strong> {p.dores||'—'}</p>
-              <p style={{color:'var(--ink)'}}><strong>Necessidades:</strong> {p.necessidades||'—'}</p>
-              {p.frase && <p style={{color:'var(--ink)',fontStyle:'italic'}}>"{p.frase}"</p>}
-            </div>
-          ))}
-        </div>
+        <CanvasFrame label="Cartões de Persona" filename="cartoes-de-persona">
+          <div className="home-grid">
+            {s.personas.filter(p=>p.nome).map(p=>{
+              const pods = odsByNum(p.ods);
+              return (
+                <div className="persona-card" key={p.id}>
+                  <div className="persona-head">
+                    <div className="persona-avatar" style={pods?{background:EIXO_META[pods.eixo].color}:undefined}>{p.nome.trim()[0]||'?'}</div>
+                    <div>
+                      <h4>{p.nome}{p.idade?(', '+p.idade+' anos'):''}</h4>
+                      <div className="sub">{p.profissao||'—'}{pods?(' · ODS '+pods.num):''}</div>
+                    </div>
+                  </div>
+                  <div className="persona-section"><span className="lbl">Contexto</span><p>{p.contexto||'—'}</p></div>
+                  <div className="grid-2">
+                    <div className="persona-section"><span className="lbl">Sonhos</span><p>{p.sonhos||'—'}</p></div>
+                    <div className="persona-section"><span className="lbl">Dores</span><p>{p.dores||'—'}</p></div>
+                  </div>
+                  <div className="persona-section"><span className="lbl">Necessidades</span><p>{p.necessidades||'—'}</p></div>
+                  {p.frase && <div className="persona-quote">"{p.frase}"</div>}
+                </div>
+              );
+            })}
+          </div>
+        </CanvasFrame>
         <CopyButton text={txt} />
       </SummaryShell>
     );
@@ -236,14 +279,22 @@ function ArtRequisitosRegras({data,setData,goHome}){
 
   if(showSummary){
     const txt = `REQUISITOS E REGRAS DE NEGÓCIO\n\nFuncionais:\n${s.funcionais.filter(Boolean).map(f=>'- '+f).join('\n')||'—'}\n\nNão funcionais:\n${s.naoFuncionais.filter(Boolean).map(f=>'- '+f).join('\n')||'—'}\n\nNormativos:\n${s.normativos.filter(Boolean).map(f=>'- '+f).join('\n')||'—'}\n\nRegras de negócio:\n${s.regras.filter(Boolean).map(f=>'- '+f).join('\n')||'—'}`;
+    const section = (label,code,items)=>(
+      <div className="spec-section">
+        <h4>{label}</h4>
+        {items.filter(Boolean).length ? items.filter(Boolean).map((it,i)=>(
+          <div className="spec-item" key={i}><span className="spec-code">{code}{String(i+1).padStart(2,'0')}</span><p>{it}</p></div>
+        )) : <p className="mini-note">Nenhum item ainda.</p>}
+      </div>
+    );
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <div className="grid-2">
-          <div className="summary-block"><h4>Funcionais</h4>{s.funcionais.filter(Boolean).map((f,i)=><p key={i} style={{color:'var(--ink)'}}>• {f}</p>)}</div>
-          <div className="summary-block"><h4>Não funcionais</h4>{s.naoFuncionais.filter(Boolean).map((f,i)=><p key={i} style={{color:'var(--ink)'}}>• {f}</p>)}</div>
-          <div className="summary-block"><h4>Normativos</h4>{s.normativos.filter(Boolean).map((f,i)=><p key={i} style={{color:'var(--ink)'}}>• {f}</p>)}</div>
-          <div className="summary-block"><h4>Regras de negócio</h4>{s.regras.filter(Boolean).map((f,i)=><p key={i} style={{color:'var(--ink)'}}>• {f}</p>)}</div>
-        </div>
+        <CanvasFrame label="Especificação Inicial" filename="especificacao-inicial">
+          {section('Requisitos Funcionais','RF',s.funcionais)}
+          {section('Requisitos Não Funcionais','RNF',s.naoFuncionais)}
+          {section('Requisitos Normativos','RN',s.normativos)}
+          {section('Regras de Negócio','RGN',s.regras)}
+        </CanvasFrame>
         <div style={{marginTop:'10px'}}><CopyButton text={txt} /></div>
       </SummaryShell>
     );

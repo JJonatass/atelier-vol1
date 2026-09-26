@@ -303,6 +303,64 @@ function useSlice(data,setData,id,defaults){
   return [slice, patch];
 }
 
+/* ---------- exportable canvas frame (renders a visual board + "baixar imagem") ---------- */
+function CanvasFrame({label,filename,children}){
+  const ref = useRef(null);
+  const [busy,setBusy] = useState(false);
+  const [err,setErr] = useState('');
+  function download(){
+    if(!ref.current || !window.html2canvas) { setErr('Exportação de imagem indisponível neste navegador.'); return; }
+    setBusy(true); setErr('');
+    window.html2canvas(ref.current, {backgroundColor:null, scale:2}).then(canvas=>{
+      canvas.toBlob(blob=>{
+        setBusy(false);
+        if(!blob){ setErr('Não consegui gerar a imagem.'); return; }
+        try{
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = (filename||'artefato')+'.png';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(()=>URL.revokeObjectURL(url), 4000);
+        }catch(e){ setErr('Não consegui baixar a imagem neste ambiente.'); }
+      });
+    }).catch(()=>{ setBusy(false); setErr('Não consegui gerar a imagem.'); });
+  }
+  return (
+    <div className="canvas-frame">
+      <div className="canvas-frame-head">
+        <span className="k">{label||'Artefato visual'}</span>
+        <button type="button" className="export-btn" disabled={busy} onClick={download}>{busy?'Gerando…':'⬇ Baixar imagem (PNG)'}</button>
+      </div>
+      <div className="canvas-body" ref={ref}>{children}</div>
+      {err && <div style={{padding:'0 16px 12px'}}><p className="export-note" style={{color:'var(--error)'}}>{err}</p></div>}
+    </div>
+  );
+}
+
+/* ---------- 1-5 rating (used for the competitor matrix) ---------- */
+function RatingField({label,value,onChange}){
+  const v = value||0;
+  return (
+    <div className="field">
+      {label && <label className="field-label">{label}</label>}
+      <div className="btn-row">
+        {[1,2,3,4,5].map(n=>(
+          <button type="button" key={n} className={"btn"+(v===n?' primary':'')} style={{padding:'6px 12px'}} onClick={()=>onChange(n)}>{n}</button>
+        ))}
+      </div>
+    </div>
+  );
+}
+function scoreColor(v){
+  const n = Number(v)||0;
+  if(n<=0) return 'var(--ink-faint)';
+  if(n<=1) return '#AE3227';
+  if(n===2) return '#C46A2E';
+  if(n===3) return '#93650A';
+  if(n===4) return '#4C8A3E';
+  return '#2E7D4F';
+}
+
 function SummaryShell({title,n,summaryText,onEdit,onHome,children}){
   return (
     <div className="card">

@@ -105,19 +105,25 @@ function ArtInvestigarProblema({data,setData,goHome}){
 
   if(showSummary){
     const txt = `INVESTIGAR O PROBLEMA\n\nTema: ${s.tema||'—'}\nODS relacionado: ${ods?('ODS '+ods.num+' — '+ods.title):'—'}\n\nContexto\nOnde: ${s.onde||'—'}\nQuando: ${s.quando||'—'}\nComo observou: ${s.comoObservou||'—'}\n\nAtores\nPrimários: ${s.usuariosPrimarios||'—'}\nSecundários: ${s.atoresSecundarios||'—'}\nInfluência: ${s.atoresInfluencia||'—'}\n\nCausas (5 porquês)\n${s.porques.filter(Boolean).map((p,i)=>(i+1)+'. '+p).join('\n')||'—'}\nControláveis: ${s.causasControlaveis||'—'}\nIncontroláveis: ${s.causasIncontrolaveis||'—'}\n\nImpactos\nCurto prazo: ${s.curtoPrazo||'—'}\nLongo prazo: ${s.longoPrazo||'—'}\nOutros ODS afetados: ${s.odsAfetados.join(', ')||'—'}\n\nIndicadores\nProcesso: ${s.indicadorProcesso||'—'}\nResultado: ${s.indicadorResultado||'—'}\nComplementar: ${s.indicadorComplementar||'—'}\n\nENUNCIADO DO PROBLEMA\n${s.enunciado||'—'}`;
+    const ultimoPorque = s.porques.filter(Boolean).slice(-1)[0];
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <div className="summary-block"><h4>Enunciado do problema</h4><p style={{color:'var(--ink)'}}>{s.enunciado||'Ainda não definido.'}</p></div>
-        <div className="summary-block"><h4>Contexto, atores e causas</h4>
-          <p style={{color:'var(--ink)'}}><strong>Onde/quando:</strong> {s.onde} · {s.quando}</p>
-          <p style={{color:'var(--ink)'}}><strong>Usuários primários:</strong> {s.usuariosPrimarios||'—'}</p>
-          <p style={{color:'var(--ink)'}}><strong>Causa raiz (último porquê):</strong> {s.porques.filter(Boolean).slice(-1)[0]||'—'}</p>
-        </div>
-        <div className="summary-block"><h4>Indicadores</h4>
-          <p style={{color:'var(--ink)'}}>Processo: {s.indicadorProcesso||'—'}</p>
-          <p style={{color:'var(--ink)'}}>Resultado: {s.indicadorResultado||'—'}</p>
-          <p style={{color:'var(--ink)'}}>Complementar: {s.indicadorComplementar||'—'}</p>
-        </div>
+        <CanvasFrame label="Canvas do Problema" filename="canvas-do-problema">
+          <div className="brief-head">
+            {ods && <div className="brief-badge" style={{background:EIXO_META[ods.eixo].color}}>{ods.num}</div>}
+            <div>
+              <div className="mini-note" style={{textTransform:'uppercase',letterSpacing:'.04em',fontWeight:700}}>{s.tema||'Tema não definido'}</div>
+              <h3 style={{margin:0}}>{ods? ('ODS '+ods.num+' — '+ods.title) : 'ODS não definido'}</h3>
+            </div>
+          </div>
+          <div className="brief-quote">{s.enunciado || 'Enunciado do problema ainda não escrito.'}</div>
+          <div className="brief-grid">
+            <div className="brief-cell"><span className="lbl">Contexto (quem, onde, quando)</span><p><strong>Onde:</strong> {s.onde||'—'}<br/><strong>Quando:</strong> {s.quando||'—'}<br/><strong>Usuários primários:</strong> {s.usuariosPrimarios||'—'}</p></div>
+            <div className="brief-cell"><span className="lbl">Causa raiz</span><p>{ultimoPorque||'—'}</p></div>
+            <div className="brief-cell"><span className="lbl">Impactos</span><p><strong>Curto prazo:</strong> {s.curtoPrazo||'—'}<br/><strong>Longo prazo:</strong> {s.longoPrazo||'—'}</p></div>
+            <div className="brief-cell"><span className="lbl">Indicadores</span><p><strong>Processo:</strong> {s.indicadorProcesso||'—'}<br/><strong>Resultado:</strong> {s.indicadorResultado||'—'}<br/><strong>Complementar:</strong> {s.indicadorComplementar||'—'}</p></div>
+          </div>
+        </CanvasFrame>
         <CopyButton text={txt} />
       </SummaryShell>
     );
@@ -189,11 +195,27 @@ function ArtRiscosSolucao({data,setData,goHome}){
     }).join('\n')+`\n\nEnunciado testado: ${s.enunciadoTeste||'—'}\nCabe em uma frase objetiva? ${s.cabeEmFrase===true?'Sim':s.cabeEmFrase===false?'Não':'—'}`;
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <div className="summary-block">
-          <h4>Riscos identificados na sua ideia</h4>
-          {presentes.length ? presentes.map(r=><p key={r.id} style={{color:'var(--ink)'}}><span className="badge error">{r.nome}</span> {(s.checks[r.id]||{}).nota}</p>) : <p className="mini-note">Nenhum risco marcado como presente — bom sinal, mas revise com calma.</p>}
-        </div>
-        <div className="summary-block"><h4>Teste do enunciado</h4><p style={{color:'var(--ink)'}}>{s.enunciadoTeste||'—'}</p><span className={"badge "+(s.cabeEmFrase?'success':'warning')}>{s.cabeEmFrase===true?'Passa no teste':s.cabeEmFrase===false?'Precisa de ajuste':'Não avaliado'}</span></div>
+        <CanvasFrame label="Raio-X de Riscos" filename="raio-x-de-riscos">
+          <div className="risk-score">
+            <div className="num">{presentes.length}/6</div>
+            <p style={{margin:0}}>riscos presentes na ideia atual{presentes.length===0? ' — bom sinal, mas revise com calma.':'.'}</p>
+          </div>
+          <div className="risk-grid">
+            {RISCOS.map(r=>{
+              const c = s.checks[r.id]||{};
+              const cls = c.presente===true?'presente':c.presente===false?'ausente':'';
+              return (
+                <div key={r.id} className={"risk-card "+cls}>
+                  <h5>{r.nome}</h5>
+                  <p><strong>{c.presente===true?'⚠ Presente':c.presente===false?'✓ Não presente':'Não avaliado'}</strong></p>
+                  {c.nota && <p style={{marginTop:'6px'}}>{c.nota}</p>}
+                </div>
+              );
+            })}
+          </div>
+          <div className="brief-quote" style={{marginTop:'16px'}}>{s.enunciadoTeste || 'Enunciado ainda não testado.'}</div>
+          <span className={"badge "+(s.cabeEmFrase?'success':'warning')}>{s.cabeEmFrase===true?'Passa no teste':s.cabeEmFrase===false?'Precisa de ajuste':'Não avaliado'}</span>
+        </CanvasFrame>
         <CopyButton text={txt} />
       </SummaryShell>
     );
@@ -282,9 +304,30 @@ function ArtLevantamentoAgil({data,setData,goHome}){
     const txt = `LEVANTAMENTO ÁGIL DO PROBLEMA\n\nEquipe: ${s.equipe||'—'}\n\nEntrevistas (Design Thinking):\n${s.entrevistas.filter(e=>e.pessoa).map(e=>'- '+e.pessoa+': '+e.resumo).join('\n')||'—'}\n\nLean Inception\nQual problema: ${s.qualProblema||'—'}\nQuem: ${s.quemUsuarios||'—'}\nObjetivos: ${s.quaisObjetivos||'—'}\n\nUser Story Mapping\n${s.historiaUsuario||'—'}\n\nJTBD\n${jtbd}\n\nDiagnóstico\n${s.diagnostico||'—'}`;
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <div className="summary-block"><h4>Entrevistas</h4>{s.entrevistas.filter(e=>e.pessoa).map(e=><p key={e.id} style={{color:'var(--ink)'}}><strong>{e.pessoa}:</strong> {e.resumo}</p>)}</div>
-        <div className="summary-block"><h4>JTBD</h4><p style={{color:'var(--ink)'}}>{jtbd}</p></div>
-        <div className="summary-block"><h4>Diagnóstico</h4><p style={{color:'var(--ink)'}}>{s.diagnostico||'—'}</p></div>
+        <CanvasFrame label="Board de Levantamento Ágil" filename="board-levantamento-agil">
+          <div className="board">
+            <div className="board-col">
+              <h4>Design Thinking</h4>
+              {s.entrevistas.filter(e=>e.pessoa).map(e=>(<div className="board-item" key={e.id}><span className="lbl">{e.pessoa}</span>{e.resumo}</div>))}
+              {!s.entrevistas.filter(e=>e.pessoa).length && <p className="mini-note">Sem entrevistas registradas.</p>}
+            </div>
+            <div className="board-col">
+              <h4>Lean Inception</h4>
+              <div className="board-item"><span className="lbl">Qual problema</span>{s.qualProblema||'—'}</div>
+              <div className="board-item"><span className="lbl">Quem</span>{s.quemUsuarios||'—'}</div>
+              <div className="board-item"><span className="lbl">Objetivos</span>{s.quaisObjetivos||'—'}</div>
+            </div>
+            <div className="board-col">
+              <h4>User Story Mapping</h4>
+              <div className="board-item">{s.historiaUsuario||'—'}</div>
+            </div>
+            <div className="board-col">
+              <h4>JTBD</h4>
+              <div className="board-item mono">{jtbd}</div>
+            </div>
+          </div>
+          <div className="brief-quote" style={{marginTop:'16px'}}><span className="lbl" style={{display:'block',fontSize:'11px',textTransform:'uppercase',color:'var(--accent)',fontWeight:700,marginBottom:'4px'}}>Diagnóstico</span>{s.diagnostico||'Ainda não escrito.'}</div>
+        </CanvasFrame>
         <CopyButton text={txt} />
       </SummaryShell>
     );
@@ -346,13 +389,15 @@ function ArtReferenciasPesquisa({data,setData,goHome}){
     const txt = `REFERÊNCIAS DE PESQUISA\n\n`+s.referencias.filter(r=>r.fonte).map(r=>`Fonte: ${r.fonte} (${r.ano}) — ${r.tipo}\nAchado: ${r.achado}\nRelevância: ${r.relevancia}\nODS: ${r.ods?odsLabel(r.ods):'—'}`).join('\n\n')+`\n\nPor que são incontornáveis:\n${s.paragrafoFinal||'—'}`;
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <div className="table-wrap">
-          <table className="tbl">
-            <thead><tr><th>Fonte</th><th>Ano</th><th>Tipo</th><th>Achado</th><th>ODS</th></tr></thead>
-            <tbody>{s.referencias.filter(r=>r.fonte).map(r=>(<tr key={r.id}><td>{r.fonte}</td><td>{r.ano}</td><td>{r.tipo}</td><td>{r.achado}</td><td>{r.ods?('ODS '+r.ods):'—'}</td></tr>))}</tbody>
-          </table>
-        </div>
-        <div className="summary-block" style={{marginTop:'12px'}}><h4>Parágrafo final</h4><p style={{color:'var(--ink)'}}>{s.paragrafoFinal||'—'}</p></div>
+        <CanvasFrame label="Dossiê de Referências" filename="dossie-de-referencias">
+          <div className="table-wrap">
+            <table className="tbl">
+              <thead><tr><th>Fonte</th><th>Ano</th><th>Tipo</th><th>Achado</th><th>ODS</th></tr></thead>
+              <tbody>{s.referencias.filter(r=>r.fonte).map(r=>(<tr key={r.id}><td>{r.fonte}</td><td>{r.ano}</td><td>{r.tipo}</td><td>{r.achado}</td><td>{r.ods?('ODS '+r.ods):'—'}</td></tr>))}</tbody>
+            </table>
+          </div>
+          <div className="brief-quote" style={{marginTop:'16px'}}>{s.paragrafoFinal||'Parágrafo final ainda não escrito.'}</div>
+        </CanvasFrame>
         <CopyButton text={txt} />
       </SummaryShell>
     );

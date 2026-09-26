@@ -66,11 +66,23 @@ function ArtOdsExplorer({data,setData,goHome}){
 
   if(showSummary){
     const todos = [...s.interesse1,...s.interesse2,...s.interesse3,...s.interesse4];
+    const markedNums = todos.map(label=>parseInt(label.replace('ODS ',''),10));
     const txt = `OS 17 ODS E OS 4 EIXOS\n\nODS que mais conectam com problemas percebidos:\n${todos.map(i=>'- '+i).join('\n')||'—'}\n\nExemplo de transversalidade:\n${s.transversal||'—'}\n\nCuriosidade/observação:\n${s.curiosidade||'—'}`;
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        <div className="summary-block"><h4>ODS que mais conectam com você</h4>{todos.length? todos.map((i,idx)=><p key={idx} style={{color:'var(--ink)'}}>• {i}</p>) : <p className="mini-note">Nenhum marcado ainda.</p>}</div>
-        <div className="summary-block"><h4>Exemplo de transversalidade</h4><p style={{color:'var(--ink)'}}>{s.transversal||'—'}</p></div>
+        <CanvasFrame label="Meu mapa de ODS" filename="meu-mapa-de-ods">
+          <h3 style={{marginTop:0}}>Meu Mapa de ODS</h3>
+          <p className="mini-note" style={{marginBottom:'14px'}}>Em destaque: os ODS que mais conectam com problemas que já percebi.</p>
+          <div className="ods-poster-grid">
+            {ODS_LIST.map(o=>(
+              <div key={o.num} className={"ods-chip"+(markedNums.includes(o.num)?' marked':'')} style={{background:EIXO_META[o.eixo].color}} title={o.title}>{o.num}</div>
+            ))}
+          </div>
+          <div className="grid-2">
+            <div className="brief-cell"><span className="lbl">ODS escolhidos</span><p>{todos.length? todos.join(' · ') : '—'}</p></div>
+            <div className="brief-cell"><span className="lbl">Exemplo de transversalidade</span><p>{s.transversal||'—'}</p></div>
+          </div>
+        </CanvasFrame>
         <p className="field-hint">Siga para 0.3–0.8 "Tecnologia com Propósito" para escolher o ODS do seu próprio projeto.</p>
         <CopyButton text={txt} />
       </SummaryShell>
@@ -170,15 +182,35 @@ function ArtPropositoSustentavel({data,setData,goHome}){
   if(showSummary){
     const sevTxt = (k,label)=>`${label}: ${s.sev[k].value===true?'Sim':s.sev[k].value===false?'Não':'—'} — ${s.sev[k].justificativa||'—'}`;
     const txt = `TECNOLOGIA COM PROPÓSITO\n\nODS foco: ${ods?('ODS '+ods.num+' — '+ods.title):'—'}\n\nDados de pesquisa:\n${s.dados.filter(Boolean).map(d=>'- '+d).join('\n')||'—'}\nFontes: ${s.fontes||'—'}\n\nEnunciado do problema:\n${s.enunciado||'—'}\n\nEstudo de caso: ${s.estudoCaso.app||'—'}\nProposta de valor: ${s.estudoCaso.propostaValor||'—'}\nPonto forte: ${s.estudoCaso.pontoForte||'—'}\nPonto fraco: ${s.estudoCaso.pontoFraco||'—'}\nInovação proposta: ${s.estudoCaso.inovacao||'—'}\n\nSUSTENTÁVEL, ESCALÁVEL, VIÁVEL\n${sevTxt('sustentavel','Sustentável')}\n${sevTxt('escalavel','Escalável')}\n${sevTxt('viavel','Viável')}`;
+    const sevLabelOf = k => k==='sustentavel'?'Sustentável':k==='escalavel'?'Escalável':'Viável';
     return (
       <SummaryShell title={meta.title} n={meta.n} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
-        {ods && <OdsCard ods={ods} />}
-        <div className="summary-block"><h4>Enunciado do problema</h4><p style={{color:'var(--ink)'}}>{s.enunciado||'—'}</p></div>
-        <div className="summary-block"><h4>Sustentável, escalável, viável?</h4>
-          {['sustentavel','escalavel','viavel'].map(k=>(
-            <p key={k} style={{color:'var(--ink)'}}><span className={"badge "+(s.sev[k].value===true?'success':s.sev[k].value===false?'error':'neutral')}>{k==='sustentavel'?'Sustentável':k==='escalavel'?'Escalável':'Viável'}: {s.sev[k].value===true?'Sim':s.sev[k].value===false?'Não':'?'}</span> {s.sev[k].justificativa}</p>
-          ))}
-        </div>
+        <CanvasFrame label="Ficha do Projeto" filename="ficha-do-projeto">
+          <div className="brief-head">
+            {ods && <div className="brief-badge" style={{background:EIXO_META[ods.eixo].color}}>{ods.num}</div>}
+            <div>
+              <div className="mini-note" style={{textTransform:'uppercase',letterSpacing:'.04em',fontWeight:700}}>{ods? (EIXO_META[ods.eixo].label+' · ODS '+ods.num) : 'ODS não definido'}</div>
+              <h3 style={{margin:0}}>{ods? ods.title : 'Escolha um ODS'}</h3>
+            </div>
+          </div>
+          <div className="brief-quote">{s.enunciado || 'Enunciado do problema ainda não escrito.'}</div>
+          <div className="stat-row">
+            {s.dados.filter(Boolean).map((d,i)=>(<div className="stat-pill" key={i}><span className="n">Dado {i+1}</span><p>{d}</p></div>))}
+          </div>
+          <div className="brief-grid" style={{marginBottom:'14px'}}>
+            <div className="brief-cell"><span className="lbl">Estudo de caso</span><p><strong>{s.estudoCaso.app||'—'}</strong> — {s.estudoCaso.propostaValor||'—'}</p></div>
+            <div className="brief-cell"><span className="lbl">Sua inovação proposta</span><p>{s.estudoCaso.inovacao||'—'}</p></div>
+          </div>
+          <div className="gauge-row">
+            {['sustentavel','escalavel','viavel'].map(k=>(
+              <div key={k} className={"gauge "+(s.sev[k].value===true?'ok':s.sev[k].value===false?'no':'pending')}>
+                <div className="lbl">{sevLabelOf(k)}</div>
+                <div className="v">{s.sev[k].value===true?'✓ Sim':s.sev[k].value===false?'✗ Não':'?'}</div>
+                <p>{s.sev[k].justificativa||'—'}</p>
+              </div>
+            ))}
+          </div>
+        </CanvasFrame>
         <CopyButton text={txt} />
       </SummaryShell>
     );
