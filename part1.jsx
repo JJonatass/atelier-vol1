@@ -376,7 +376,9 @@ function buildInfographicPrompt({id,title,n,summaryText}){
 
 function SummaryShell({title,n,id,summaryText,onEdit,onHome,children}){
   const [promptOpen,setPromptOpen] = useState(false);
-  const prompt = useMemo(()=>buildInfographicPrompt({id,title,n,summaryText}), [id,title,n,summaryText]);
+  const generated = useMemo(()=>buildInfographicPrompt({id,title,n,summaryText}), [id,title,n,summaryText]);
+  const [edited,setEdited] = useState(null);
+  const prompt = edited===null ? generated : edited;
   return (
     <div className="card">
       <div className="toolbar-top">
@@ -393,9 +395,9 @@ function SummaryShell({title,n,id,summaryText,onEdit,onHome,children}){
       {promptOpen && (
         <div className="summary-block" style={{marginBottom:'18px'}}>
           <h4>Prompt para gerar o infográfico (IA de imagem)</h4>
-          <p className="mini-note" style={{marginBottom:'10px'}}>Cole este texto em um gerador de imagens por IA (ex.: ChatGPT/DALL·E, Gemini, Midjourney) para criar uma lâmina em 16:9 pronta para apresentação.</p>
-          <textarea readOnly value={prompt} rows={14} onFocus={e=>e.target.select()} style={{fontFamily:'var(--font-mono)',fontSize:'12px',lineHeight:'1.5'}} />
-          <div style={{marginTop:'10px'}}><CopyButton text={prompt} label="Copiar prompt" /></div>
+          <p className="mini-note" style={{marginBottom:'10px'}}>Você pode editar o texto abaixo (ajustar cena, cores, tom ou o que deve aparecer) antes de copiar. Cole-o em um gerador de imagens por IA (ex.: ChatGPT/DALL·E, Gemini, Midjourney) para criar uma lâmina em 16:9 pronta para apresentação.</p>
+          <textarea value={prompt} rows={14} onChange={e=>setEdited(e.target.value)} style={{fontFamily:'var(--font-mono)',fontSize:'12px',lineHeight:'1.5'}} />
+          <div style={{marginTop:'10px',display:'flex',gap:'10px',flexWrap:'wrap'}}><CopyButton text={prompt} label="Copiar prompt" />{edited!==null && <button type="button" className="btn" onClick={()=>setEdited(null)}>Restaurar prompt original</button>}</div>
         </div>
       )}
       <div>{children}</div>
