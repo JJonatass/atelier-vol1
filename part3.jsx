@@ -15,6 +15,12 @@ function ArtInvestigarProblema({data,setData,goHome}){
        <p>Começar pelo problema é o jeito mais seguro de não desperdiçar <strong>tempo, dinheiro e energia criativa</strong>. Muitas equipes de tecnologia se apaixonam por soluções — um app novo, uma IA de última geração, uma plataforma com funcionalidades incríveis — mas esquecem de verificar se existe, de fato, um problema relevante a ser resolvido. O resultado é comum: produtos bonitos, caros e sofisticados que acabam sem uso real porque não atacam uma dor concreta.</p>
        <p>Problematizar significa <strong>investigar e organizar o desafio antes de pensar em soluções</strong>, em quatro movimentos: investigar o contexto, identificar os atores, mapear causas e reconhecer os impactos — até construir indicadores que permitam medir mudanças.</p>
      </>,
+     teach:{
+       why:"A tecnologia é um meio, não um fim: o valor aparece quando você alivia uma dor específica de pessoas reais, em um contexto concreto, com resultados que podem ser verificados e medidos. Cada linha de código e cada tela precisa estar a serviço de algo que importa para alguém.",
+       how:["Investigue o contexto: onde e em que condições o problema aparece.","Identifique os atores: quem é afetado, quem se beneficia, quem sofre as consequências.","Mapeie as causas: por que isso acontece e o que mantém o problema vivo.","Reconheça os impactos: o que está em jogo se nada for resolvido.","Construa indicadores e finalize com um enunciado curto do problema."],
+       example:"Tema do exemplo didático do livro: mobilidade urbana em periferias (ODS 11). A partir dele, a equipe chega a um enunciado, ao contexto, às causas, aos impactos e aos indicadores, tudo antes de pensar em qualquer app.",
+       mistakes:["Se apaixonar pela solução (um app novo, uma IA de ponta, uma plataforma cheia de funções) sem verificar se existe um problema relevante.","Entregar um produto bonito e caro que acaba sem uso real por não atacar uma dor concreta."]
+     },
      render:()=>(
        <div>
          <Field label="Tema/problema que você quer investigar" value={s.tema} onChange={v=>patch({tema:v})} placeholder="Ex.: mobilidade urbana em periferias" />
@@ -29,6 +35,11 @@ function ArtInvestigarProblema({data,setData,goHome}){
        <p><strong>Objetivo:</strong> situar o problema em tempo, espaço e circunstâncias. <strong>Como fazer:</strong> observe o ambiente real em que o problema ocorre (visitas de campo, observação direta, shadowing); pergunte quando o problema é mais evidente (horários de pico, épocas do ano, fases da vida); use dados secundários (notícias, relatórios, estatísticas) para complementar a visão.</p>
        <p>Exemplo (ODS 6 – Água Potável): o problema do desperdício de água se manifesta mais fortemente no período de estiagem, em bairros com saneamento precário e sistemas de encanamento antigos.</p>
      </>,
+     teach:{
+       why:"Um problema só fica claro quando é situado em tempo, espaço e circunstâncias. O objetivo é situar o problema em tempo, espaço e circunstâncias.",
+       how:["Vá ao ambiente real onde o problema ocorre: visita de campo, observação direta, shadowing.","Descubra quando ele é mais evidente: horários de pico, épocas do ano, fases da vida.","Complemente com dados secundários: notícias, relatórios, estatísticas."],
+       example:"No exemplo didático de mobilidade urbana: quem são os afetados (trabalhadores informais e estudantes de bairros periféricos), onde (cidades médias brasileiras com transporte público irregular) e quando (todos os dias, principalmente nos horários de pico, de manhã e no final da tarde)."
+     },
      render:()=>(
        <div>
          <Field label="Onde o problema aparece?" value={s.onde} onChange={v=>patch({onde:v})} placeholder="Ex.: bairros periféricos de cidades médias" />
@@ -43,6 +54,11 @@ function ArtInvestigarProblema({data,setData,goHome}){
        <p><strong>Como fazer:</strong> liste os <strong>usuários primários</strong> (quem sofre a dor), identifique os <strong>atores secundários</strong> (quem interage com eles) e avalie também os <strong>atores de influência</strong> (políticas públicas, ONGs, empresas, gestores).</p>
        <p>Exemplo (ODS 2 – Fome Zero): primários — famílias em insegurança alimentar; secundários — agricultores com excedentes de produção; de influência — ONGs, secretarias municipais de assistência social.</p>
      </>,
+     teach:{
+       why:"Mapear os grupos envolvidos direta e indiretamente evita enxergar só uma parte do problema e mostra quem pode ajudar ou travar a mudança.",
+       how:["Liste os usuários primários: quem sofre a dor.","Identifique os atores secundários: quem interage com eles.","Avalie os atores de influência: políticas públicas, ONGs, empresas, gestores."],
+       example:"No exemplo didático de mobilidade urbana, os afetados diretamente são trabalhadores informais e estudantes que moram em bairros periféricos."
+     },
      render:()=>(
        <div>
          <Field type="textarea" rows={2} label="Usuários primários (quem sofre a dor)" value={s.usuariosPrimarios} onChange={v=>patch({usuariosPrimarios:v})} />
@@ -57,6 +73,12 @@ function ArtInvestigarProblema({data,setData,goHome}){
        <p><strong>Como fazer:</strong> use a técnica dos <strong>5 porquês</strong> — pergunte repetidamente "por quê?" até chegar à causa estrutural — ou construa um diagrama de <strong>Ishikawa (espinha de peixe)</strong> para organizar causas em categorias (infraestrutura, comportamento, políticas, recursos). Diferencie causas <strong>controláveis</strong> (mudáveis pela solução) e <strong>incontroláveis</strong> (restrições externas).</p>
        <p>Exemplo (ODS 11 – Mobilidade Urbana): longas esperas em pontos de ônibus → causa 1: baixa frota disponível; causa 2: falta de manutenção em veículos; causa 3: ausência de planejamento de linhas para periferias.</p>
      </>,
+     teach:{
+       why:"O objetivo é chegar às causas raízes, e não apenas aos sintomas.",
+       how:["Pergunte \"por quê?\" repetidamente até chegar à causa estrutural.","Se preferir, organize as causas em categorias (infraestrutura, comportamento, políticas, recursos) num diagrama de Ishikawa, a espinha de peixe.","Separe o que é controlável (pode ser mudado pela sua solução) do que é incontrolável (restrição externa)."],
+       example:"Causas principais do exemplo didático de mobilidade: oferta insuficiente de linhas e horários irregulares; longas distâncias até os terminais; falta de integração entre ônibus, metrô e bicicletas compartilhadas; baixa prioridade de investimento em mobilidade periférica.",
+       mistakes:["Identificar apenas sintomas, e não causas raízes."]
+     },
      render:()=>(
        <div>
          <ListField label="Técnica dos 5 porquês (cada linha aprofunda mais)" items={s.porques} onChange={v=>patch({porques:v})} placeholder="Por quê?" minRows={5} />
@@ -71,6 +93,11 @@ function ArtInvestigarProblema({data,setData,goHome}){
        <p><strong>Como fazer:</strong> liste consequências <strong>de curto prazo</strong> (cotidiano imediato) e <strong>de longo prazo</strong> (efeitos estruturais); verifique impactos em <strong>mais de um ODS</strong> (transversalidade).</p>
        <p>Exemplo (ODS 3 – Saúde e Bem-Estar): curto prazo — idosos esquecem medicação → internações evitáveis; longo prazo — sobrecarga no sistema público de saúde, redução da expectativa de vida.</p>
      </>,
+     teach:{
+       why:"Mostrar o que está em jogo prova a relevância do problema em dimensões sociais, econômicas e ambientais.",
+       how:["Liste as consequências de curto prazo, as do cotidiano imediato.","Liste as de longo prazo, os efeitos estruturais.","Verifique se o problema afeta mais de um ODS (transversalidade)."],
+       example:"No exemplo didático de mobilidade: social, perda de convivência familiar e aumento da evasão escolar por atrasos; econômico, queda de produtividade e custo de deslocamento maior (tarifas altas e vários transportes); ambiental, mais emissões de CO₂ pelo uso de motos e carros."
+     },
      render:()=>(
        <div>
          <Field type="textarea" rows={2} label="Consequências de curto prazo" value={s.curtoPrazo} onChange={v=>patch({curtoPrazo:v})} />
@@ -86,6 +113,12 @@ function ArtInvestigarProblema({data,setData,goHome}){
        <p><strong>b) Indicadores de Resultado</strong> — medem efeitos concretos gerados para os usuários. Exemplo (ODS 11): redução do tempo médio de espera em pontos de ônibus em bairros periféricos.</p>
        <p><strong>c) Indicadores Complementares</strong> — medem percepções subjetivas ou efeitos indiretos. Exemplo (ODS 3): grau de satisfação dos idosos com o lembrete de medicamentos (pesquisa de opinião).</p>
      </>,
+     teach:{
+       why:"Entender o problema não basta: é preciso medir se a solução realmente gerou impacto. O indicador de processo acompanha se o projeto está sendo implementado corretamente, o de resultado mostra se o problema está sendo resolvido e o complementar capta nuances que números duros não mostram.",
+       how:["O que podemos contar (quantitativo)?","O que podemos observar (comportamentos)?","O que podemos perguntar (percepção/qualidade)?","O que mudará a curto prazo (processo) e a longo prazo (resultado)?"],
+       example:"No exemplo didático de mobilidade: processo, tempo médio de espera no ponto de ônibus (em minutos); resultado, redução no gasto mensal com transporte (% da renda familiar); complementar, satisfação dos usuários com o transporte (pesquisa de percepção).",
+       mistakes:["Medir atividade em vez de impacto real, como comemorar downloads sem verificar se o gasto das famílias caiu (padrão \"métricas irrelevantes\" do livro)."]
+     },
      render:()=>(
        <div>
          <Field label="Indicador de processo" value={s.indicadorProcesso} onChange={v=>patch({indicadorProcesso:v})} placeholder="O que podemos contar (quantitativo)?" />
@@ -99,6 +132,12 @@ function ArtInvestigarProblema({data,setData,goHome}){
        <p>Esse processo gera um <strong>enunciado do problema</strong>: uma frase curta, objetiva e mensurável (até 250 caracteres) que serve de guia para toda a equipe — deve dizer <strong>quem sofre</strong>, <strong>o que acontece</strong>, <strong>a causa</strong> e o <strong>impacto</strong>.</p>
        <p>Exemplo: "Moradores de bairros periféricos enfrentam dificuldades de mobilidade devido à falta de transporte público eficiente e acessível, resultando em altos custos e perda de tempo diário."</p>
      </>,
+     teach:{
+       why:"O enunciado é a frase curta, objetiva e mensurável que serve de guia para toda a equipe. Se você não consegue explicar o problema em uma frase simples, ainda tem apenas um tema.",
+       how:["Responda: quem é afetado diretamente?","O que acontece de concreto, sem adjetivos vagos?","Por que isso acontece (causa principal)?","Quais impactos surgem se nada mudar?","Junte tudo em uma frase de até 250 caracteres."],
+       example:"O enunciado do livro funciona porque diz quem sofre (moradores de periferia), o que acontece (dificuldade de mobilidade), a causa (falta de transporte eficiente e acessível), o impacto (altos custos e perda de tempo) e cabe em menos de 250 caracteres.",
+       mistakes:["Usar adjetivos vagos em vez de descrever o que acontece de concreto.","Não conseguir explicar o problema em uma frase simples (ter só um tema)."]
+     },
      render:()=><Field type="textarea" label="Enunciado do problema (≤ 250 caracteres)" value={s.enunciado} onChange={v=>patch({enunciado:v})} rows={3} />
     },
   ];
@@ -143,6 +182,33 @@ const RISCOS = [
   {id:'metricas', nome:'Métricas irrelevantes', oQue:'Medir atividade em vez de impacto real.', exemplo:'Comemorar 50 mil downloads de um aplicativo de transporte solidário, sem verificar se ele realmente reduziu o gasto das famílias com deslocamento ou se diminuiu emissões de CO₂.', resultado:'Sensação de sucesso sem transformação concreta.', ods:'ODS 13 (Ação Climática), ODS 11 (Cidades Sustentáveis).'},
 ];
 
+const RISCO_TEACH = {
+  tecnossolucao:{
+    why:"Tecnologia sofisticada não substitui o básico: se o problema central é o acesso a infraestrutura de saúde, o investimento alto em um sistema não o resolve.",
+    how:["Pergunta de verificação (sugestão): qual é o problema central e a tecnologia escolhida ataca esse problema?","Pergunta de verificação (sugestão): o público tem as condições para usá-la, como internet estável?"]
+  },
+  vies:{
+    why:"Quando só se buscam dados que confirmam a ideia inicial, a solução serve a um grupo já convertido e não gera impacto ampliado.",
+    how:["Pergunta de verificação (sugestão): pesquisei antes de decidir qual é o problema?","Pergunta de verificação (sugestão): ouvi também quem está fora do grupo já engajado, como quem nunca separa lixo?"]
+  },
+  feature:{
+    why:"Cada recurso extra que não ataca a dor principal esconde a função essencial, e o usuário se perde e abandona a solução.",
+    how:["Pergunta de verificação (sugestão): qual é a função principal, por exemplo conectar excedente de alimentos a famílias?","Pergunta de verificação (sugestão): cada nova função (chat, gamificação, ranking, loja virtual) ataca essa dor principal?"]
+  },
+  escopo:{
+    why:"Um problema amplo demais leva a objetivos inalcançáveis, cronogramas inviáveis e um projeto que nunca sai do papel.",
+    how:["Pergunta de verificação (sugestão): o problema tem recorte claro, em vez de algo amplo como \"mobilidade urbana no Brasil\"?","Sugestão: faça um recorte claro, como 'transporte escolar em uma cidade pequena'."]
+  },
+  aderencia:{
+    why:"Uma solução tecnicamente boa não gera mudança se não se encaixa no contexto do usuário, e o resultado é poucos downloads e desinstalações rápidas.",
+    how:["Pergunta de verificação (sugestão): conheço a realidade do público-alvo, por exemplo idosos com celulares simples?","Pergunta de verificação (sugestão): a solução exige mais do que o usuário tem, como internet 24h e smartphones modernos?"]
+  },
+  metricas:{
+    why:"Medir atividade em vez de impacto dá a sensação de sucesso sem transformação concreta.",
+    how:["Pergunta de verificação (sugestão): meus indicadores medem o efeito real, por exemplo o gasto das famílias com deslocamento ou as emissões de CO₂?","Pergunta de verificação (sugestão): estou comemorando apenas números de uso, como 50 mil downloads?"]
+  }
+};
+
 function ArtRiscosSolucao({data,setData,goHome}){
   const defaults = {checks:{}, enunciadoTeste:'', cabeEmFrase:null, step:0, done:false};
   const [s,patch] = useSlice(data,setData,'riscosSolucao',defaults);
@@ -158,6 +224,7 @@ function ArtRiscosSolucao({data,setData,goHome}){
       <p><strong>Resultado:</strong> {r.resultado}</p>
       <p><strong>ODS relacionados:</strong> {r.ods}</p>
     </>,
+    teach:RISCO_TEACH[r.id],
     render:()=>(
       <div>
         <YesNo label={"Esse risco está presente na sua ideia atual?"} value={(s.checks[r.id]||{}).presente} onChange={v=>setCheck(r.id,'presente',v)} />
@@ -173,11 +240,21 @@ function ArtRiscosSolucao({data,setData,goHome}){
        <p>Ir direto para a solução é tentador. É comum que, diante de um tema inspirador, equipes já queiram abrir o Figma, escrever código ou pensar em funcionalidades. O problema é que soluções construídas sem compreender a realidade tendem a falhar: custam caro, não são usadas e, muitas vezes, reforçam desigualdades em vez de resolvê-las.</p>
        <p>Vamos ver, um a um, os padrões de erro mais comuns quando a problematização é ignorada — e verificar se algum deles está presente na sua ideia atual.</p>
      </>,
+     teach:{
+       why:"Soluções construídas sem compreender a realidade tendem a falhar: custam caro, não são usadas e, muitas vezes, reforçam desigualdades em vez de resolvê-las.",
+       how:["Antes de abrir o Figma ou escrever código, passe pela problematização.","Revise, um a um, os seis padrões de erro e verifique se algum está presente na sua ideia."],
+       mistakes:["Diante de um tema inspirador, já querer abrir o Figma, escrever código ou pensar em funcionalidades."]
+     },
      render:()=>(<p className="mini-note">Avance para revisar, um a um, os 6 padrões de erro descritos no livro.</p>)
     },
     ...riscoSteps,
     {label:'O teste final do enunciado',
      book:<p>Assim como no exemplo didático do livro, um enunciado de problema bem construído diz quem sofre, o que acontece, a causa e o impacto — e cabe em menos de 250 caracteres. Cole aqui o enunciado do artefato "1.1 Investigar o Problema" (ou escreva um novo) e teste se ele resiste.</p>,
+     teach:{
+       why:"Se você não consegue explicar o problema em uma frase simples, ainda não tem um problema, tem apenas um tema. O teste mostra se a problematização resultou em algo claro.",
+       how:["Verifique se diz quem sofre.","Verifique se diz o que acontece.","Verifique se mostra a causa.","Verifique se aponta o impacto.","Confira se cabe em menos de 250 caracteres."],
+       example:"\"Moradores de bairros periféricos enfrentam dificuldades de mobilidade devido à falta de transporte público eficiente e acessível, resultando em altos custos e perda de tempo diário.\" (exemplo didático do livro)"
+     },
      render:()=>(
        <div>
          <Field type="textarea" rows={3} label="Seu enunciado do problema" value={s.enunciadoTeste} onChange={v=>patch({enunciadoTeste:v})} placeholder={(data.investigarProblema&&data.investigarProblema.enunciado)||''} />
@@ -255,6 +332,11 @@ function ArtLevantamentoAgil({data,setData,goHome}){
         <p><strong>O que é:</strong> abordagem centrada no ser humano, que busca entender profundamente necessidades e dores. <strong>Como aplicar:</strong> entrevistas rápidas, observação em campo, imersão no cotidiano do usuário. Exemplo (ODS 4 – Educação): observar uma sala de aula em escola pública para entender por que alunos abandonam os estudos.</p>
         <p>Faça ao menos <strong>3 entrevistas rápidas</strong> com pessoas que vivenciam o problema.</p>
       </>,
+      teach:{
+        why:"Ouvir diretamente quem vive o problema é aprender com o usuário em vez de supor o que ele precisa.",
+        how:["Escolha pessoas que vivenciam o problema.","Faça ao menos 3 entrevistas rápidas.","Complemente com observação em campo e imersão no cotidiano do usuário."],
+        example:"No caso dos idosos que esquecem medicação, a equipe começou com entrevistas rápidas para ouvir diretamente idosos e cuidadores."
+      },
       render:()=>(
         <div>
           {s.entrevistas.map((e,i)=>(
@@ -273,6 +355,11 @@ function ArtLevantamentoAgil({data,setData,goHome}){
     if(id==='leanInception') return {
       label:'Lean Inception',
       book:<p><strong>O que é:</strong> workshop intensivo (geralmente 1 semana) para alinhar visão entre equipe, usuários e stakeholders. <strong>Como aplicar:</strong> dinâmicas rápidas para definir <strong>qual problema resolver</strong>, <strong>quem são os usuários</strong> e <strong>quais são os objetivos</strong>. Exemplo (ODS 11 – Cidades Sustentáveis): prefeitura, comunidade e técnicos mapeiam juntos os desafios do transporte público em bairros periféricos.</p>,
+      teach:{
+        why:"Alinha a visão entre equipe, usuários e stakeholders sobre o que será atacado.",
+        how:["Reúna equipe, usuários e demais envolvidos.","Use dinâmicas rápidas para definir qual problema resolver.","Defina quem são os usuários.","Defina quais são os objetivos."],
+        example:"Prefeitura, comunidade e técnicos mapeando juntos os desafios do transporte público em bairros periféricos (ODS 11)."
+      },
       render:()=>(
         <div>
           <Field type="textarea" rows={2} label="Qual problema resolver?" value={s.qualProblema} onChange={v=>patch({qualProblema:v})} />
@@ -287,6 +374,11 @@ function ArtLevantamentoAgil({data,setData,goHome}){
         <p><strong>O que é:</strong> técnica visual para mapear a jornada do usuário como histórias: <strong>"Como [persona], quero [objetivo], para [benefício]."</strong> Exemplo (ODS 12 – Consumo Responsável): mapear a experiência de uma família ao tentar separar lixo reciclável e entregá-lo para coleta seletiva.</p>
         <p>Assim como no JTBD, monte cada história preenchendo os três blocos abaixo — um mapa de jornada geralmente reúne <strong>várias histórias</strong> encadeadas, então adicione quantas forem necessárias.</p>
       </>,
+      teach:{
+        why:"Transformar a rotina do usuário em histórias deixa visíveis as etapas que ele percorre e os pontos em que sente dor.",
+        how:["Identifique as etapas que o usuário percorre.","Descreva a necessidade em cada etapa.","Aponte os possíveis pontos de dor.","Escreva cada história no formato \"Como [persona], quero [objetivo], para [benefício]\"."],
+        example:"A rotina dos idosos foi descrita como: acordar, lembrar do remédio, tomar, registrar. Outro exemplo (ODS 2): \"Como agricultor, quero vender meus alimentos frescos rapidamente, para garantir renda e evitar desperdício.\""
+      },
       render:()=>(
         <div>
           {s.historiasUsuario.map((h,i)=>(
@@ -312,6 +404,11 @@ function ArtLevantamentoAgil({data,setData,goHome}){
         <p><strong>O que é:</strong> método que busca descobrir a "tarefa" que o usuário deseja realizar, independente da solução existente. <strong>Como aplicar:</strong> "Quando eu [situação], preciso de [ação], para que eu possa [resultado]."</p>
         <p>Exemplo (ODS 3 – Saúde e Bem-Estar): "Quando quero cuidar da minha saúde, preciso de lembretes simples, para que eu não esqueça de tomar meus remédios."</p>
       </>,
+      teach:{
+        why:"O foco é a tarefa que o usuário quer realizar, independentemente da solução que já exista.",
+        how:["Investigue situações reais.","Complete a frase: \"Quando eu [situação], preciso de [ação], para que eu possa [resultado]\"."],
+        example:"ODS 2: \"Quando tenho excedente de produção, preciso de um canal simples para vender, para que eu não perca alimentos nem renda.\""
+      },
       render:()=>(
         <div>
           <Field label="Quando eu... (situação)" value={s.jtbdSituacao} onChange={v=>patch({jtbdSituacao:v})} />
@@ -329,6 +426,11 @@ function ArtLevantamentoAgil({data,setData,goHome}){
        <p>"Métodos ágeis no levantamento do problema significam ouvir cedo, testar hipóteses rápido e corrigir a rota antes de investir em soluções complexas."</p>
        <p>O levantamento do problema é a etapa de descoberta: investigar causas, ouvir os atores envolvidos e compreender os impactos antes de imaginar qualquer solução. Nos métodos ágeis essa investigação não é longa, burocrática ou distante — acontece de forma <strong>colaborativa, iterativa e rápida</strong>: colaboração (todos os envolvidos participam), iteração (ciclos curtos validam hipóteses em poucos dias), rapidez, e foco no usuário (decisões guiadas pela experiência real).</p>
      </>,
+     teach:{
+       why:"Nos métodos ágeis a investigação não é longa, burocrática ou distante: acontece de forma colaborativa, iterativa e rápida, priorizando aprender com o usuário em vez de supor o que ele precisa.",
+       how:["Colaboração: todos os envolvidos participam, em vez de uma pesquisa isolada.","Iteração: o objetivo é melhorar continuamente, não acertar de primeira.","Rapidez: ciclos curtos validam hipóteses em poucos dias.","Foco no usuário: decisões guiadas pela experiência real."],
+       mistakes:["Fazer uma pesquisa isolada, longa e distante do usuário.","Decidir com base em suposições da equipe."]
+     },
      render:()=><Field label="Quem vai participar do levantamento com você?" value={s.equipe} onChange={v=>patch({equipe:v})} placeholder="Ex.: eu, mais 2 colegas de equipe, e um professor orientador" />
     },
     {label:'Escolha o método de levantamento',
@@ -350,6 +452,11 @@ function ArtLevantamentoAgil({data,setData,goHome}){
     ...(metodoAtual ? [metodoStep(metodoAtual.id)] : []),
     {label:'Síntese: diagnóstico claro',
      book:<p>Como no exemplo do livro (idosos que esquecem medicação): ao combinar entrevistas, User Story Mapping e JTBD, uma equipe chega a um diagnóstico claro — o problema não era "falta de disciplina", mas "ausência de lembretes simples adaptados a celulares básicos". Escreva o diagnóstico que emergiu da sua investigação.</p>,
+     teach:{
+       why:"O levantamento serve para chegar a um diagnóstico claro do que realmente acontece, indo além da primeira impressão.",
+       how:["Reúna o que apareceu nas entrevistas, nas histórias e na tarefa central do usuário.","Escreva o que realmente descobriu."],
+       example:"Equipe dos idosos: aplicou entrevistas, User Story Mapping e JTBD e concluiu que o problema não era apenas \"falta de disciplina\", mas ausência de lembretes simples adaptados a celulares básicos."
+     },
      render:()=><Field type="textarea" label="Diagnóstico claro (o que realmente descobrimos)" value={s.diagnostico} onChange={v=>patch({diagnostico:v})} rows={3} />
     },
   ];
@@ -411,6 +518,10 @@ function ArtReferenciasPesquisa({data,setData,goHome}){
        <p>Definir o problema é apenas o primeiro passo. Para transformá-lo em algo <strong>relevante e convincente</strong>, precisamos fundamentar o que descobrimos em <strong>dados concretos</strong>. As referências de pesquisa mostram que o problema não é apenas uma percepção individual, mas uma questão real, validada e documentada — aumentando a credibilidade do projeto e preparando terreno para a escolha de indicadores de impacto.</p>
        <p><strong>Organizações internacionais:</strong> ONU, PNUD, UNICEF, Banco Mundial. <strong>Fontes nacionais:</strong> IBGE, IPEA, ministérios e secretarias. <strong>Fontes acadêmicas:</strong> artigos científicos, Scielo, Google Scholar. <strong>ONGs e organizações locais:</strong> relatórios de impacto social, pesquisas de campo locais.</p>
      </>,
+     teach:{
+       why:"Os dados validam que o problema existe em escala e não é um caso isolado, dão credibilidade perante professores, empresas ou investidores, ajudam a ver se é urgente, permitem comparar contextos (nacional, regional, local) e oferecem números que servirão de linha de base para medir resultados.",
+       how:["Organizações internacionais: ONU (relatórios sobre os ODS), PNUD (desenvolvimento humano, desigualdade, pobreza), UNICEF (educação, infância), Banco Mundial.","Fontes nacionais: IBGE (censos, PNAD contínua), IPEA (políticas públicas), ministérios e secretarias.","Fontes acadêmicas: artigos científicos, Scielo, Google Scholar, repositórios de universidades.","ONGs e organizações locais: relatórios de impacto social e pesquisas de campo locais."]
+     },
      render:()=><CheckGroup label="Quais dessas fontes você já consultou (ou pretende consultar)?" options={['Organizações internacionais (ONU, PNUD, UNICEF, Banco Mundial)','Fontes nacionais (IBGE, IPEA, ministérios)','Fontes acadêmicas (artigos, Scielo, Google Scholar)','ONGs e organizações locais']} values={s.fontesConsultadas} onChange={v=>patch({fontesConsultadas:v})} />
     },
     {label:'Registrar referências',
@@ -418,6 +529,12 @@ function ArtReferenciasPesquisa({data,setData,goHome}){
        <p>Para cada referência, busque <strong>números claros</strong> (porcentagens, índices, totais), <strong>conecte aos ODS</strong> (um dado pode se relacionar a mais de um objetivo), <strong>compare diferentes fontes</strong> para evitar viés, e <strong>traga para o contexto local</strong>.</p>
        <p>Busque ao menos <strong>duas referências confiáveis</strong> que comprovem a relevância do seu problema.</p>
      </>,
+     teach:{
+       why:"Registrar fonte, ano, tipo, achado e relevância mostra que o problema é uma questão real, validada e documentada, e não só uma percepção individual.",
+       how:["Busque duas referências confiáveis que comprovem a relevância do problema.","Preencha fonte, ano, tipo, achado principal e relevância para o problema.","Relacione cada dado a pelo menos um ODS: um dado pode se ligar a mais de um.","Use a norma ABNT para referenciar corretamente."],
+       example:"IBGE, 2022: 37% dos brasileiros gastam mais de 1h30 por dia em deslocamentos. Relevância: valida soluções de mobilidade urbana que reduzam tempo e custo de transporte (ODS 11).",
+       mistakes:["Usar apenas uma fonte, sem comparar com outras (comparar ajuda a evitar viés).","Ficar só em dados globais, sem trazer números locais que mostram proximidade e impacto direto."]
+     },
      render:()=>(
        <div>
          {s.referencias.map((r,i)=>(
@@ -439,6 +556,11 @@ function ArtReferenciasPesquisa({data,setData,goHome}){
     },
     {label:'Por que esses dados são incontornáveis',
      book:<p>Prepare um pequeno parágrafo (5–6 linhas) explicando por que esses dados tornam seu problema incontornável — ou seja, por que ele não pode ser ignorado.</p>,
+     teach:{
+       why:"As referências são a ponte entre a percepção inicial do problema e sua validação científica e social, e aumentam a credibilidade do projeto.",
+       how:["Reúna os achados registrados.","Escreva um parágrafo de 5 a 6 linhas explicando por que esses dados tornam o problema incontornável."],
+       example:"ODS 2, ONU Brasil 2023: 33 milhões de brasileiros vivem em insegurança alimentar, o que fundamenta projetos que redistribuam alimentos ou conectem agricultores a consumidores."
+     },
      render:()=><Field type="textarea" label="Parágrafo final" value={s.paragrafoFinal} onChange={v=>patch({paragrafoFinal:v})} rows={5} />
     },
   ];

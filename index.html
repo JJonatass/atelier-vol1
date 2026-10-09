@@ -256,6 +256,17 @@
   .ods-poster-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(58px,1fr)); gap:8px; margin-bottom:14px; }
   .ods-chip{ aspect-ratio:1; border-radius:9px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-family:var(--font-display); font-size:15px; opacity:.3; }
   .ods-chip.marked{ opacity:1; box-shadow:0 0 0 3px var(--card), 0 0 0 5px var(--ink); }
+  .teach{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-sm); margin-bottom:20px; }
+  .teach > summary{ cursor:pointer; padding:12px 16px; font-weight:700; font-size:13.5px; color:var(--accent); list-style:none; }
+  .teach > summary::-webkit-details-marker{ display:none; }
+  .teach[open] > summary{ border-bottom:1px solid var(--line-soft); }
+  .teach-hint{ font-weight:500; color:var(--ink-faint); font-size:12.5px; }
+  .teach-sec{ padding:12px 16px 2px; }
+  .teach-sec h5{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint); margin:0 0 6px; }
+  .teach-sec p, .teach-sec li{ font-size:14px; color:var(--ink); line-height:1.55; }
+  .teach-sec ol, .teach-sec ul{ margin:0 0 8px; padding-left:20px; }
+  .teach-ex{ background:var(--card-2); }
+  .teach-err h5{ color:var(--accent-2); }
 </style>
 <div id="root"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>

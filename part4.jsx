@@ -18,6 +18,11 @@ function ArtAnaliseConcorrentes({data,setData,goHome}){
        <p>Depois de definir e validar o problema, o próximo passo é <strong>analisar quem já tentou resolvê-lo</strong>. Esse processo é conhecido como <strong>benchmarking</strong>: observar soluções existentes, identificar o que funciona, reconhecer limitações e, principalmente, descobrir <strong>oportunidades de inovação</strong>.</p>
        <p>Ele evita retrabalho (não reinventar algo que já existe e funciona bem), ensina com erros alheios (cada limitação é uma chance de fazer diferente), identifica padrões de mercado, mapeia lacunas (o que ninguém está oferecendo) e inspira melhorias.</p>
      </>,
+     teach:{
+       why:"Benchmarking significa aprender com os outros. Olhar o que já existe poupa você de reinventar a roda e mostra onde há espaço real para inovar.",
+       how:["Parta do problema que você já definiu e validou.","Procure quem já tentou resolvê-lo, de qualquer forma.","Observe o que funciona e o que limita a experiência em cada solução.","Anote as lacunas: o que ninguém oferece, mas poderia gerar valor."],
+       example:"Se várias soluções já oferecem as mesmas funcionalidades, isso indica um padrão de mercado que os usuários provavelmente esperam. O que nenhuma delas oferece é uma lacuna a explorar."
+     },
      render:()=>(<p className="mini-note">Avance para registrar seus concorrentes diretos e indiretos.</p>)
     },
     {label:'Identificar e comparar concorrentes',
@@ -26,6 +31,19 @@ function ArtAnaliseConcorrentes({data,setData,goHome}){
        <p>Exemplo aplicado (ODS 11 – Mobilidade Urbana): "Caronas Comunitárias" (direto) oferece caronas locais, baixo custo e proximidade, mas tem baixa adesão e confiança — oportunidade: verificação local e gamificação.</p>
        <p>Compare pelo menos <strong>dois concorrentes reais</strong>.</p>
      </>,
+     teach:{
+       why:"Uma comparação lado a lado, com os mesmos atributos para todos, transforma impressões soltas em evidência. É dela que saem as oportunidades de melhoria.",
+       how:["Classifique cada um como direto (mesmo problema, mesmo público) ou indireto (resolve de outro modo ou só em parte).","Baixe o app ou acesse o site, leia as avaliações nas lojas de apps, consulte matérias e estudos de caso e teste as funcionalidades principais.","Preencha os mesmos atributos para cada concorrente: público-alvo, funcionalidades, pontos fortes, pontos fracos e oportunidades.","Compare pelo menos dois concorrentes reais."],
+       example:<>
+         <p>Exemplo do livro (ODS 11 – Mobilidade Urbana):</p>
+         <ul>
+           <li><strong>Caronas Comunitárias:</strong> público de moradores de bairros; oferece caronas locais; pontos fortes: baixo custo e proximidade; pontos fracos: pouca adesão e baixa confiança; oportunidade: verificação local e gamificação.</li>
+           <li><strong>App Transporte Público:</strong> público de capitais; dados em tempo real de ônibus e metrô; ponto forte: informação precisa; ponto fraco: não cobre cidades médias; oportunidade: expandir para periferias.</li>
+         </ul>
+         <p>Concorrente indireto, segundo o livro: apps de transporte pago, como Uber e 99, também afetam a mobilidade urbana.</p>
+       </>,
+       mistakes:["Ignorar os pontos fortes e olhar só os fracos.","Copiar todas as funcionalidades existentes.","Considerar concorrente apenas quem atua em nível global.","Comparar menos de dois concorrentes reais."]
+     },
      render:()=>(
        <div>
          {s.concorrentes.map((c,i)=>(
@@ -56,6 +74,11 @@ function ArtAnaliseConcorrentes({data,setData,goHome}){
     },
     {label:'Sua oportunidade de diferenciação',
      book:<p><strong>Passo 4 — Sintetizar aprendizados:</strong> destaque quais pontos podem ser aproveitados no seu projeto e marque as lacunas como potenciais inovações.</p>,
+     teach:{
+       why:"A comparação só vale se virar decisão. Esta síntese diz o que você vai aproveitar dos outros e onde o seu projeto pode ser diferente.",
+       how:["Monte uma matriz comparativa visual com os concorrentes.","Destaque os pontos que podem ser aproveitados no seu projeto.","Marque as lacunas como potenciais inovações.","Escolha uma oportunidade concreta que diferencie o seu projeto."],
+       example:"Na tabela do livro, Caronas Comunitárias tem como pontos fracos pouca adesão e baixa confiança, e como oportunidade verificação local e gamificação."
+     },
      render:()=><Field type="textarea" label="Identifique uma oportunidade concreta que poderia diferenciar o seu projeto" value={s.oportunidadeDiferencial} onChange={v=>patch({oportunidadeDiferencial:v})} rows={3} />
     },
   ];
@@ -107,22 +130,73 @@ function ArtMapaEmpatia({data,setData,goHome}){
        <p>Seu valor está em <strong>humanizar</strong> os dados: em vez de ver apenas números ou estatísticas, entendemos a experiência do usuário como ser humano completo, com dores, frustrações e aspirações. Tradicionalmente é dividido em seis quadrantes, mas pode ser simplificado em quatro grandes áreas para iniciantes.</p>
        <p>Sempre use <strong>histórias reais</strong> coletadas em entrevistas e observações — não invente características.</p>
      </>,
+     teach:{
+       why:"Números e estatísticas não mostram a pessoa inteira. O mapa humaniza os dados e deixa ver o que o usuário pensa, sente e deseja, além do que ele faz.",
+       how:["Defina quem é o usuário principal afetado pelo problema.","Faça uma entrevista rápida (5 a 10 minutos) sobre a rotina dele em relação ao problema.","Preencha os quadrantes com o que você ouviu e observou.","Faça em grupo, com post-its ou ferramentas digitais como Miro, Mural ou Canva, e depois compare padrões entre usuários."],
+       example:"Usuário do livro (ODS 2): mãe solo em comunidade urbana. Outro exemplo (ODS 11): trabalhador da periferia que depende de transporte público.",
+       mistakes:["Inventar características em vez de usar histórias reais de entrevistas e observações.","Preencher sozinho, sem trazer múltiplas percepções.","Tratar o mapa como fixo, sem atualizá-lo quando surgem novos dados."]
+     },
      render:()=><Field label="Quem é o usuário deste mapa? (nome/persona)" value={s.usuario} onChange={v=>patch({usuario:v})} placeholder="Ex.: mãe solo em comunidade urbana (ODS 2)" />
     },
     {label:'Pensa/Sente',
      book:<p><strong>Pergunta-chave:</strong> O que ocupa a mente do usuário? Quais são suas maiores preocupações, medos, aspirações? Exemplo (ODS 2): "Será que terei comida suficiente para meus filhos esta semana?"</p>,
+     teach:{
+       why:"Este quadrante revela o mundo interno do usuário, que não aparece em dados de uso: o que ocupa a mente dele e o que ele teme ou deseja.",
+       how:["Pergunte ao usuário o que ocupa a mente dele em relação ao problema.","Registre preocupações, medos e aspirações."],
+       example:<>
+         <p>Do livro:</p>
+         <ul>
+           <li>ODS 2: "Será que terei comida suficiente para meus filhos esta semana?"</li>
+           <li>ODS 11: "Perco horas no trânsito, quase não vejo minha família."</li>
+           <li>ODS 6: "Por que minha casa não tem banheiro como a da escola?"</li>
+         </ul>
+       </>
+     },
      render:()=><Field type="textarea" label="Pensa/Sente" value={s.pensaSente} onChange={v=>patch({pensaSente:v})} rows={3} />
     },
     {label:'Ouve/Fala',
      book:<p><strong>Pergunta-chave:</strong> O que o usuário escuta de pessoas próximas (amigos, familiares, comunidade)? O que ele expressa em conversas, redes sociais, reclamações? Exemplo (ODS 11): ouve reclamações no ponto de ônibus; comenta atrasos no trabalho.</p>,
+     teach:{
+       why:"O que a pessoa escuta de quem está perto e o que ela diz em voz alta mostram as influências sociais e as queixas que cercam o problema.",
+       how:["Pergunte o que ela escuta de amigos, familiares e comunidade.","Registre o que ela expressa em conversas, redes sociais e reclamações."],
+       example:<>
+         <p>Do livro:</p>
+         <ul>
+           <li>ODS 2: escuta vizinhos reclamando do preço dos alimentos e desabafa em grupos de WhatsApp.</li>
+           <li>ODS 6: ouve conselhos da mãe sobre economizar água e comenta com amigos sobre doenças frequentes.</li>
+         </ul>
+       </>
+     },
      render:()=><Field type="textarea" label="Ouve/Fala" value={s.ouveFala} onChange={v=>patch({ouveFala:v})} rows={3} />
     },
     {label:'Vê/Faz',
      book:<p><strong>Pergunta-chave:</strong> O que ele observa em seu ambiente? Quais comportamentos são frequentes no dia a dia? Exemplo (ODS 6): vê vizinhos pegando água em baldes; participa de mutirões para limpar a rua.</p>,
+     teach:{
+       why:"O que ele observa em seu ambiente e os comportamentos frequentes no dia a dia.",
+       how:["Observe o que o usuário vê no ambiente dele.","Anote os comportamentos que se repetem no dia a dia."],
+       example:<>
+         <p>Do livro:</p>
+         <ul>
+           <li>ODS 2: vê promoções em mercados, mas não consegue comprar em quantidade, e às vezes pula refeições.</li>
+           <li>ODS 11: vê ônibus lotados e viagens demoradas; tenta usar carona ou bicicleta quando possível.</li>
+         </ul>
+       </>
+     },
      render:()=><Field type="textarea" label="Vê/Faz" value={s.veFaz} onChange={v=>patch({veFaz:v})} rows={3} />
     },
     {label:'Dores/Ganhos',
      book:<p><strong>Dores:</strong> barreiras, frustrações, limitações que atrapalham sua vida. <strong>Ganhos:</strong> desejos, necessidades e resultados esperados de uma solução.</p>,
+     teach:{
+       why:"Dores e ganhos fecham o mapa apontando o que atrapalha o usuário e o que ele espera de uma solução. É o que alimenta os requisitos mais adiante.",
+       how:["Em Dores, liste barreiras, frustrações e limitações.","Em Ganhos, liste desejos, necessidades e resultados esperados de uma solução."],
+       example:<>
+         <p>Usuário do livro (ODS 11), trabalhador da periferia:</p>
+         <ul>
+           <li><strong>Dores:</strong> transporte irregular, custo alto, falta de segurança.</li>
+           <li><strong>Ganhos:</strong> transporte confiável, barato e acessível.</li>
+         </ul>
+       </>
+     },
      render:()=>(<div className="grid-2"><Field type="textarea" label="Dores" value={s.dores} onChange={v=>patch({dores:v})} rows={3} /><Field type="textarea" label="Ganhos" value={s.ganhos} onChange={v=>patch({ganhos:v})} rows={3} /></div>)
     },
   ];
@@ -170,6 +244,15 @@ function ArtPersonas({data,setData,goHome}){
        <p>Uma <strong>persona</strong> é uma representação fictícia de um usuário real, construída a partir de <strong>dados coletados</strong> sobre comportamentos, necessidades, objetivos e frustrações. Ela não é um "palpite criativo", mas sim um retrato elaborado com base em pesquisas, entrevistas e observações.</p>
        <p>Enquanto o <strong>público-alvo</strong> descreve um grupo amplo de pessoas (ex.: "mulheres entre 20 e 40 anos da zona urbana"), a <strong>persona</strong> dá rosto e voz a esse grupo (ex.: "Maria, 32 anos, professora de escola pública, mãe solo, preocupada com o preço dos alimentos e com o futuro dos filhos"). Público-alvo é sobre <em>quem</em>; persona é sobre <em>como vive e o que sente</em> esse "quem".</p>
      </>,
+     teach:{
+       why:"O público-alvo é uma segmentação útil para estratégias gerais de comunicação, mas não mostra hábitos, emoções e contexto. A persona acrescenta isso.",
+       how:["Descreva primeiro o grupo amplo, o quem.","Depois construa, a partir de dados de pesquisa, uma pessoa que represente esse grupo."],
+       example:<>
+         <p><strong>Público-alvo:</strong> "Agricultores familiares do semiárido nordestino, com renda de até 2 salários mínimos."</p>
+         <p><strong>Persona:</strong> "José, 45 anos, agricultor em Pernambuco, vive com a esposa e dois filhos, luta para vender excedentes, usa celular básico e participa de uma associação local."</p>
+       </>,
+       mistakes:["Confundir os dois: público-alvo é sobre quem; persona é sobre como vive e o que sente esse quem.","Tratar a persona como palpite criativo, sem base em pesquisa, entrevistas e observações."]
+     },
      render:()=><Field type="textarea" label="Descreva o público-alvo (grupo amplo) do seu projeto" value={s.publicoAlvo} onChange={v=>patch({publicoAlvo:v})} placeholder='Ex.: "Agricultores familiares do semiárido nordestino, com renda de até 2 salários mínimos."' rows={2} />
     },
     {label:'Criar personas',
@@ -177,6 +260,19 @@ function ArtPersonas({data,setData,goHome}){
        <p>Ao criar uma persona, inclua: <strong>nome fictício</strong> (para humanizar), <strong>idade e profissão/ocupação</strong>, <strong>contexto de vida</strong> (família, ambiente, renda, localização), <strong>sonhos e desejos</strong>, <strong>dores e frustrações</strong>, <strong>necessidades e desafios</strong>, e uma <strong>frase representativa</strong> (como se fosse uma citação real).</p>
        <p>Exemplo (ODS 2 – Fome Zero): José da Silva, 45 anos, agricultor familiar em Pernambuco, renda irregular; dores: dificuldade em vender excedentes, alimentos desperdiçados; necessidades: acesso a mercados locais, apps de conexão com consumidores; frase: "Se eu pudesse vender direto ao consumidor, teria menos perda e mais renda."</p>
      </>,
+     teach:{
+       why:"Uma persona dá nome, rosto e história a um grupo, o que ajuda a equipe a pensar em alguém concreto ao projetar.",
+       how:["Colete dados: entrevistas, questionários e observação de campo.","Analise e agrupe padrões de comportamento, dores e objetivos.","Crie a persona: nome, rosto e história fictícia que representem aquele grupo.","Preencha todos os campos: idade, ocupação, contexto, sonhos, dores, necessidades e frase."],
+       example:<>
+         <p>Do livro (ODS 4 – Educação de Qualidade): <strong>Ana Paula</strong>, 16 anos, estudante do ensino médio em escola pública, mora em periferia urbana e tem família de baixa renda.</p>
+         <ul>
+           <li><strong>Dores:</strong> falta de transporte escolar; necessidade de trabalhar cedo.</li>
+           <li><strong>Necessidades:</strong> apoio para continuar os estudos, bolsas de permanência.</li>
+           <li><strong>Frase:</strong> "Quero terminar os estudos, mas às vezes penso em desistir porque preciso ajudar em casa."</li>
+         </ul>
+       </>,
+       mistakes:["Basear-se em estereótipos sem pesquisa.","Inventar perfis fictícios sem relação com dados.","Deixar de ouvir e documentar vozes de usuários reais."]
+     },
      render:()=>(
        <div>
          {s.personas.map((p,i)=>(
@@ -202,6 +298,11 @@ function ArtPersonas({data,setData,goHome}){
     },
     {label:'Validação',
      book:<p>Personas não são fixas; devem ser revisadas conforme novos dados surgem. Revise com a equipe e stakeholders para garantir relevância.</p>,
+     teach:{
+       why:"Uma persona só é útil se continuar fiel aos usuários reais. A validação confere a relevância dela, e as revisões a mantêm atual.",
+       how:["Revise a persona com a equipe e com os stakeholders.","Confirme que ela se baseia em entrevistas e observações reais.","Atualize sempre que novos dados surgirem."],
+       mistakes:["Criar a persona uma única vez e nunca revisar.","Reaproveitar sempre as mesmas personas de outros projetos."]
+     },
      render:()=><CheckGroup label="Validação" options={['Revisado com a equipe','Baseado em entrevistas/observações reais','Compartilhado com stakeholders']} values={s.validado} onChange={v=>patch({validado:v})} />
     },
   ];
@@ -257,14 +358,44 @@ function ArtRequisitosRegras({data,setData,goHome}){
        <p>Ao final da problematização, quando o problema já está definido, validado e humanizado, chega o momento de começar a traduzir descobertas em <strong>requisitos e regras de negócio</strong> — a ponte entre a compreensão do problema e a futura ideação de soluções.</p>
        <p><strong>Requisitos funcionais</strong> descrevem <strong>o que o sistema deve fazer</strong>, suas funcionalidades centrais. Exemplo (ODS 2 – Fome Zero): "O sistema deve permitir que estabelecimentos cadastrem alimentos disponíveis"; "O sistema deve enviar notificações a famílias cadastradas quando houver doações próximas."</p>
      </>,
+     teach:{
+       why:"Requisitos descrevem o que uma solução deve atender para ser útil e viável. Escrevê-los faz a ponte entre entender o problema e começar a idealizar soluções.",
+       how:["Parta das dores e necessidades que você levantou.","Escreva cada requisito funcional como algo que o sistema deve fazer.","Mantenha o foco nas funcionalidades centrais."],
+       example:<>
+         <p>Do livro (ODS 6 – Água Potável e Saneamento):</p>
+         <ul><li>"O sistema deve permitir que famílias registrem ocorrências de falta de água."</li></ul>
+       </>
+     },
      render:()=><ListField label="Requisitos funcionais" items={s.funcionais} onChange={v=>patch({funcionais:v})} placeholder="O sistema deve..." minRows={2} />
     },
     {label:'Requisitos não funcionais',
      book:<p><strong>Requisitos não funcionais</strong> especificam <strong>como o sistema deve se comportar</strong> em termos de desempenho, usabilidade, segurança ou escalabilidade. Exemplo (ODS 11 – Cidades Sustentáveis): "O aplicativo deve estar disponível 24h por dia, 7 dias por semana"; "O tempo de resposta para consulta de linhas de ônibus não pode exceder 2 segundos."</p>,
+     teach:{
+       why:"Uma solução que faz o que deveria, mas é lenta, insegura ou difícil de usar, não atende ao usuário. Estes requisitos tratam de como o sistema se comporta.",
+       how:["Pense em desempenho, usabilidade, segurança e escalabilidade.","Escreva cada requisito de forma que dê para verificar, por exemplo com um limite de tempo."],
+       example:<>
+         <p>Do livro:</p>
+         <ul>
+           <li>ODS 11: "O tempo de resposta para consulta de linhas de ônibus não pode exceder 2 segundos."</li>
+           <li>ODS 6: "O app deve funcionar mesmo em áreas de baixa conectividade."</li>
+         </ul>
+       </>
+     },
      render:()=><ListField label="Requisitos não funcionais" items={s.naoFuncionais} onChange={v=>patch({naoFuncionais:v})} placeholder="O sistema deve se comportar de forma..." minRows={1} />
     },
     {label:'Requisitos normativos',
      book:<p><strong>Requisitos normativos (legais/regulatórios)</strong> descrevem obrigações impostas por leis, normas técnicas ou políticas de privacidade. Exemplo (ODS 3 – Saúde): "O sistema deve respeitar a LGPD (Lei Geral de Proteção de Dados) ao coletar informações de pacientes"; "Relatórios de vacinação devem ser compatíveis com exigências do Ministério da Saúde."</p>,
+     teach:{
+       why:"Descrevem obrigações impostas por leis, normas técnicas ou políticas de privacidade.",
+       how:["Consulte as legislações vigentes e a documentação de órgãos públicos ou empresas envolvidas.","Escreva cada obrigação como algo que o sistema deve respeitar ou cumprir."],
+       example:<>
+         <p>Do livro:</p>
+         <ul>
+           <li>ODS 3: "O sistema deve respeitar a LGPD ao coletar informações de pacientes."</li>
+           <li>ODS 6: "Os dados devem ser armazenados em conformidade com a LGPD."</li>
+         </ul>
+       </>
+     },
      render:()=><ListField label="Requisitos normativos" items={s.normativos} onChange={v=>patch({normativos:v})} placeholder="O sistema deve respeitar/cumprir..." minRows={1} />
     },
     {label:'Regras de negócio',
@@ -273,6 +404,19 @@ function ArtRequisitosRegras({data,setData,goHome}){
        <p>Exemplo (ODS 2 – Fome Zero): "Não é permitido cadastrar alimentos vencidos"; "Cada família pode agendar no máximo duas coletas por semana." Exemplo (ODS 8 – Trabalho Decente): "Um microcrédito não pode ultrapassar 30% da renda mensal do solicitante."</p>
        <p>Você pode coletar requisitos e regras a partir da problematização (levantamento ágil, mapas de empatia e personas), com os stakeholders (oficinas, entrevistas, priorização por valor de negócio) e com base em normas (legislações vigentes, documentação interna).</p>
      </>,
+     teach:{
+       why:"As regras de negócio registram políticas e práticas acordadas com usuários e stakeholders. Elas delimitam o que o sistema pode ou não permitir naquele domínio.",
+       how:["Extraia dores e necessidades do levantamento ágil e transforme as percepções dos mapas de empatia e das personas em funcionalidades.","Converse com os stakeholders em oficinas, entrevistas e workshops, priorizando por valor de negócio (o que gera mais impacto para o usuário).","Consulte legislações vigentes e regras internas de empresas ou órgãos públicos."],
+       example:<>
+         <p>Do livro:</p>
+         <ul>
+           <li>ODS 2: "Cada família pode agendar no máximo duas coletas por semana."</li>
+           <li>ODS 8: "Um microcrédito não pode ultrapassar 30% da renda mensal do solicitante."</li>
+           <li>ODS 6: "Só moradores cadastrados podem registrar ocorrências; cada ocorrência deve incluir data e horário."</li>
+         </ul>
+       </>,
+       mistakes:["Confundir regra de negócio com requisito técnico: a regra é uma restrição ou condição específica do domínio, e o requisito funcional diz o que o sistema deve fazer."]
+     },
      render:()=><ListField label="Regras de negócio" items={s.regras} onChange={v=>patch({regras:v})} placeholder="Não é permitido... / Cada usuário pode..." minRows={2} />
     },
   ];
