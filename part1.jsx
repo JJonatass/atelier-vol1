@@ -106,14 +106,12 @@ function BookNote({children}){
   );
 }
 
-function Teach({why,how,example,mistakes,storeKey}){
-  const k='atelier-teach-seen:'+(storeKey||'');
-  const [open,setOpen] = useState(()=>{ try{ return !localStorage.getItem(k); }catch(e){ return true; } });
-  useEffect(()=>{ try{ localStorage.setItem(k,'1'); }catch(e){} },[]);
+function Teach({why,how,example,mistakes}){
   if(!why && !(how&&how.length) && !example && !(mistakes&&mistakes.length)) return null;
+  const parts=[why&&'por quê',(how&&how.length)&&'como fazer',example&&'exemplo',(mistakes&&mistakes.length)&&'erros comuns'].filter(Boolean).join(' · ');
   return (
-    <details className="teach" open={open} onToggle={e=>setOpen(e.currentTarget.open)}>
-      <summary>🎓 Aprenda antes de preencher{!open && <span className="teach-hint"> — toque para abrir</span>}</summary>
+    <details className="teach">
+      <summary>🎓 Aprenda antes de preencher<span className="teach-hint"> — {parts}</span></summary>
       {why && <div className="teach-sec"><h5>Por que isso importa</h5><p>{why}</p></div>}
       {how && how.length>0 && <div className="teach-sec"><h5>Como fazer</h5><ol>{how.map((h,i)=><li key={i}>{h}</li>)}</ol></div>}
       {example && <div className="teach-sec teach-ex"><h5>Exemplo do livro</h5>{typeof example==='string'?<p>{example}</p>:example}</div>}
@@ -292,7 +290,7 @@ function Screen({title,n,stepIndex,setStepIndex,steps,onDone,doneLabel,canAdvanc
           ))}
         </div>
         {step.book && <BookNote>{step.book}</BookNote>}
-        {step.teach && <Teach key={n+':'+stepIndex} storeKey={'v1:'+n+':'+stepIndex} {...step.teach} />}
+        {step.teach && <Teach key={n+':'+stepIndex} {...step.teach} />}
         <div>{step.render()}</div>
         <div className="nav-row">
           <button className="btn ghost" disabled={stepIndex===0} onClick={()=>setStepIndex(stepIndex-1)}>← Voltar</button>
